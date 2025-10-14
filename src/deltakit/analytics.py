@@ -5,19 +5,17 @@ import platform
 
 
 class PackageAnalytics:
-    """Simple GA4 Measurement Protocol implementation for Python packages"""
+    """Analytics tracker that uses a proxy server for GA4"""
 
-    def __init__(self, measurement_id, api_secret):
+    def __init__(self, proxy_url):
         """
         Initialize analytics tracker
 
         Args:
-            measurement_id: Your GA4 Measurement ID (G-XXXXXXXXXX)
-            api_secret: Your Measurement Protocol API Secret
+            proxy_url: Your proxy server URL (e.g., 'https://your-project.up.railway.app')
         """
-        self.measurement_id = measurement_id
-        self.api_secret = api_secret
-        self.endpoint = "https://www.google-analytics.com/mp/collect"
+        self.proxy_url = proxy_url.rstrip('/')  # Remove trailing slash if present
+        self.track_endpoint = f"{self.proxy_url}/track"
 
         # Generate or load a persistent client ID
         self.client_id = self._get_client_id()
@@ -44,7 +42,7 @@ class PackageAnalytics:
 
     def track_event(self, event_name, params=None):
         """
-        Send an event to GA4
+        Send an event via the proxy to GA4
 
         Args:
             event_name: Name of the event (e.g., 'package_imported', 'function_called')
@@ -67,13 +65,14 @@ class PackageAnalytics:
 
         payload = {
             "client_id": self.client_id,
-            "events": [{"name": event_name, "params": params}],
+            "event_name": event_name,
+            "params": params,
         }
 
         try:
             # Use a short timeout and don't block on failure
             requests.post(
-                f"{self.endpoint}?measurement_id={self.measurement_id}&api_secret={self.api_secret}",
+                self.track_endpoint,
                 json=payload,
                 timeout=2,
             )
