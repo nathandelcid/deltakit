@@ -32,7 +32,7 @@ class NoNoiseMatchingSequence(SequentialNoise[HyperMultiGraph, OrderedDecodingEd
 
     def error_generator(
         self,
-        code_data: HyperMultiGraph,
+        code_data: HyperMultiGraph,  # noqa: ARG002
         seed: int | None = None,  # noqa: ARG002
     ) -> Iterator[OrderedDecodingEdges]:
         yield OrderedDecodingEdges()
@@ -88,7 +88,7 @@ class NoMatchingNoise(IndependentMatchingNoise):
 
     def error_generator(
         self,
-        code_data: HyperMultiGraph,
+        code_data: HyperMultiGraph,  # noqa: ARG002
         seed: int | None = None,  # noqa: ARG002
     ) -> Iterator[OrderedDecodingEdges]:
         while True:

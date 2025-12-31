@@ -26,6 +26,12 @@ unfixable = []
 # Comments are using unicode symbol for sigma for better readability, but it looks like
 # "o" and this rule raises a warning due to that.
 "src/deltakit_explorer/analysis/_lambda.py" = ["RUF003"]
+# Uses variables named "l", which is ambiguous and triggers that rule. The literature
+# is using the letter "l", and ideally we want to stick to the literature, so we
+# silence the warning for these two files.
+"src/deltakit_explorer/codes/_bivariate_bicycle_code.py" = ["E741"]
+"tests/unit/codes/test_bivariate_bicycle_code.py" = ["E741"]
+
 "tests/**/*.py" = [
     # Temporary ignore.
     "RUF043",

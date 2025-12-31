@@ -52,7 +52,7 @@ class TestPolynomial:
             ],
         ],
     )
-    def test_Polynomial_from_vec_works_as_expected(self, vec, l, m, exp_poly):  # noqa: E741
+    def test_Polynomial_from_vec_works_as_expected(self, vec, l, m, exp_poly):
         assert Polynomial.from_vec(vec, l, m) == exp_poly
 
     @pytest.mark.parametrize(
@@ -71,7 +71,7 @@ class TestPolynomial:
             [[1, 1, 1, 1], 2, 2],
         ],
     )
-    def test_Polynomial_to_vec_works_as_expected(self, vec, l, m):  # noqa: E741
+    def test_Polynomial_to_vec_works_as_expected(self, vec, l, m):
         assert Polynomial.from_vec(vec, l, m).to_vec() == vec
 
     def test_Polynomial_repr_str_works_as_expected(self):
@@ -135,7 +135,7 @@ class TestMonomial:
     @pytest.mark.parametrize(
         "x_pow, y_pow, l, m", [[1, 1, 2, 2], [2, 2, 3, 3], [3, 3, 4, 4], [4, 4, 5, 5]]
     )
-    def test_Monomial_init_correct_for_valid_values(self, x_pow, y_pow, l, m):  # noqa: E741
+    def test_Monomial_init_correct_for_valid_values(self, x_pow, y_pow, l, m):
         mon = Monomial(x_pow, y_pow, l, m)
         assert mon.x_pow == x_pow
         assert mon.y_pow == y_pow

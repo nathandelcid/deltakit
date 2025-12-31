@@ -145,7 +145,7 @@ class Monomial:
         a part of.
     """
 
-    def __init__(self, x_pow: int, y_pow: int, l: int, m: int):  # noqa: E741
+    def __init__(self, x_pow: int, y_pow: int, l: int, m: int):
         if l > 0 and m > 0:
             self.l = l
             self.m = m
@@ -214,7 +214,7 @@ class Polynomial:
         self.monomials = monomials
 
     @staticmethod
-    def from_vec(vec: list[int], l, m) -> Polynomial:  # noqa: E741
+    def from_vec(vec: list[int], l, m) -> Polynomial:
         """
         Create a Polynomial from a binary vector.
 
