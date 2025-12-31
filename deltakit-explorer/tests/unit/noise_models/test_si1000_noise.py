@@ -2,8 +2,12 @@
 import pytest
 from deltakit_circuit import Circuit, GateLayer, NoiseContext, Qubit, SweepBit
 from deltakit_circuit.gates import CX, MRX, MRY, MRZ, RX, RY, RZ, H
-from deltakit_circuit.noise_channels import (Depolarise1, Depolarise2,
-                                             PauliXError, PauliZError)
+from deltakit_circuit.noise_channels import (
+    Depolarise1,
+    Depolarise2,
+    PauliXError,
+    PauliZError,
+)
 from deltakit_explorer.qpu._noise import SI1000Noise
 
 
@@ -92,9 +96,12 @@ class TestSI1000Noise:
         ]
         assert noise_channels == [x_after]
 
-    @pytest.mark.parametrize("si1000_noise, str_val", [
-        (SI1000Noise(p=0.123), "SI1000_noise_1e-01"),
-        (SI1000Noise(p=0.123, pL=0.234), "SI1000_noise_1e-01_2e-01")
-    ])
+    @pytest.mark.parametrize(
+        "si1000_noise, str_val",
+        [
+            (SI1000Noise(p=0.123), "SI1000_noise_1e-01"),
+            (SI1000Noise(p=0.123, pL=0.234), "SI1000_noise_1e-01_2e-01"),
+        ],
+    )
     def test_si1000_str(self, si1000_noise, str_val):
         assert str(si1000_noise) == str_val

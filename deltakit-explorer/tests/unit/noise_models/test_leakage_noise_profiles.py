@@ -1,8 +1,19 @@
 # (c) Copyright Riverlane 2020-2025.
 import pytest
 from deltakit_circuit import Circuit, GateLayer, NoiseContext
-from deltakit_circuit.gates import (CX, MX, MY, MZ, ONE_QUBIT_GATES, RX, RY,
-                                    RZ, TWO_QUBIT_GATES, H, X)
+from deltakit_circuit.gates import (
+    CX,
+    MX,
+    MY,
+    MZ,
+    ONE_QUBIT_GATES,
+    RX,
+    RY,
+    RZ,
+    TWO_QUBIT_GATES,
+    H,
+    X,
+)
 from deltakit_circuit.noise_channels import Depolarise1, Leakage, Relax
 from deltakit_explorer.qpu._noise._leakage_noise_profiles import (
     idle_qubit_relaxation_noise_profile,
@@ -10,7 +21,8 @@ from deltakit_explorer.qpu._noise._leakage_noise_profiles import (
     qubit_reset_leakage_noise_profile,
     resonator_idle_qubit_relaxation_noise_profile,
     two_qubit_gate_leakage_noise_profile,
-    two_qubit_gate_relaxation_noise_profile)
+    two_qubit_gate_relaxation_noise_profile,
+)
 
 ONE_QUBIT_GATES = list(ONE_QUBIT_GATES)
 ONE_QUBIT_GATES = sorted(ONE_QUBIT_GATES, key=lambda x: x.__name__)

@@ -6,16 +6,25 @@ of a QPU.
 
 from typing import Optional
 
-from deltakit_circuit.gates import (MEASUREMENT_GATES, ONE_QUBIT_GATES,
-                                    ONE_QUBIT_MEASUREMENT_GATES, RESET_GATES,
-                                    TWO_QUBIT_GATES, Gate,
-                                    OneQubitCliffordGate, OneQubitResetGate,
-                                    TwoOperandGate, _MeasurementGate)
+from deltakit_circuit.gates import (
+    MEASUREMENT_GATES,
+    ONE_QUBIT_GATES,
+    ONE_QUBIT_MEASUREMENT_GATES,
+    RESET_GATES,
+    TWO_QUBIT_GATES,
+    Gate,
+    OneQubitCliffordGate,
+    OneQubitResetGate,
+    TwoOperandGate,
+    _MeasurementGate,
+)
 from deltakit_circuit.gates._measurement_gates import MPP
-from deltakit_explorer._gates._gate_sets import (DEFAULT_MEASUREMENT_GATES,
-                                                 DEFAULT_ONE_QUBIT_GATES,
-                                                 DEFAULT_RESET_GATES,
-                                                 DEFAULT_TWO_QUBIT_GATES)
+from deltakit_explorer._gates._gate_sets import (
+    DEFAULT_MEASUREMENT_GATES,
+    DEFAULT_ONE_QUBIT_GATES,
+    DEFAULT_RESET_GATES,
+    DEFAULT_TWO_QUBIT_GATES,
+)
 
 
 class NativeGateSetAndTimes:
@@ -153,9 +162,13 @@ class NativeGateSetAndTimes:
         self.native_gates.add(gate)
 
     @staticmethod
-    def from_times(time_1_qubit_gate: float, time_2_qubit_gate: float,
-                   time_reset: float, time_measurement: float,
-                   native_gates: Optional['NativeGateSet'] = None):
+    def from_times(
+        time_1_qubit_gate: float,
+        time_2_qubit_gate: float,
+        time_reset: float,
+        time_measurement: float,
+        native_gates: Optional["NativeGateSet"] = None,
+    ):
         """Assign times to gates based on class (1-qubit, 2-qubit, reset, measurement).
 
         Parameters
@@ -226,14 +239,10 @@ class NativeGateSet(NativeGateSetAndTimes):
         measurement_gates: set[type[_MeasurementGate]] | None = None,
     ):
         one_qubit_gates_and_times = (
-            dict.fromkeys(one_qubit_gates, 1.0)
-            if one_qubit_gates is not None
-            else None
+            dict.fromkeys(one_qubit_gates, 1.0) if one_qubit_gates is not None else None
         )
         two_qubit_gates_and_times = (
-            dict.fromkeys(two_qubit_gates, 1.0)
-            if two_qubit_gates is not None
-            else None
+            dict.fromkeys(two_qubit_gates, 1.0) if two_qubit_gates is not None else None
         )
         reset_gates_and_times = (
             dict.fromkeys(reset_gates, 1.0) if reset_gates is not None else None
@@ -263,5 +272,5 @@ class ExhaustiveGateSet(NativeGateSet):
             one_qubit_gates=ONE_QUBIT_GATES,
             two_qubit_gates=TWO_QUBIT_GATES,
             reset_gates=RESET_GATES,
-            measurement_gates=MEASUREMENT_GATES
+            measurement_gates=MEASUREMENT_GATES,
         )

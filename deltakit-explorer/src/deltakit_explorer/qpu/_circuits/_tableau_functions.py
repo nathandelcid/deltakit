@@ -3,6 +3,7 @@
 This module consists of functions enabling circuit compilation
 using the stim Tableau.
 """
+
 # pylint: disable=too-many-lines,too-many-nested-blocks,too-many-branches,too-many-statements
 from collections import defaultdict
 from dataclasses import dataclass
@@ -13,17 +14,51 @@ from collections.abc import Sequence
 import numpy as np
 import stim
 from deltakit_circuit import Circuit, GateLayer, Layer, Qubit
-from deltakit_circuit.gates import (CX, CXSWAP, CY, CZ, CZSWAP, ISWAP,
-                                    ISWAP_DAG, MEASUREMENT_GATE_MAPPING, MPP,
-                                    MRX, MRY, MRZ, MX, MY, MZ,
-                                    ONE_QUBIT_GATE_MAPPING, RESET_GATE_MAPPING,
-                                    RX, RY, RZ, S_DAG, SQRT_XX, SQRT_XX_DAG,
-                                    SQRT_YY, SQRT_YY_DAG, SQRT_ZZ, SQRT_ZZ_DAG,
-                                    TWO_QUBIT_GATE_MAPPING, XCX, XCY, XCZ, YCX,
-                                    YCY, YCZ, Gate, H, I, S)
-from deltakit_explorer.qpu._native_gate_set import (NativeGateSetAndTimes,
-                                                    OneQubitCliffordGate,
-                                                    TwoOperandGate)
+from deltakit_circuit.gates import (
+    CX,
+    CXSWAP,
+    CY,
+    CZ,
+    CZSWAP,
+    ISWAP,
+    ISWAP_DAG,
+    MEASUREMENT_GATE_MAPPING,
+    MPP,
+    MRX,
+    MRY,
+    MRZ,
+    MX,
+    MY,
+    MZ,
+    ONE_QUBIT_GATE_MAPPING,
+    RESET_GATE_MAPPING,
+    RX,
+    RY,
+    RZ,
+    S_DAG,
+    SQRT_XX,
+    SQRT_XX_DAG,
+    SQRT_YY,
+    SQRT_YY_DAG,
+    SQRT_ZZ,
+    SQRT_ZZ_DAG,
+    TWO_QUBIT_GATE_MAPPING,
+    XCX,
+    XCY,
+    XCZ,
+    YCX,
+    YCY,
+    YCZ,
+    Gate,
+    H,
+    I,
+    S,
+)
+from deltakit_explorer.qpu._native_gate_set import (
+    NativeGateSetAndTimes,
+    OneQubitCliffordGate,
+    TwoOperandGate,
+)
 
 # key: tuple of the form (gate's layer index, gate's qubit, gate's stim_string representation)
 # values: dictionary containing preceding and succeeding unitary block indices:
@@ -477,9 +512,7 @@ def _get_compilation_with_projectors_before_unitaries(
                             xs=[stim.PauliString(tableau[0])],
                             zs=[stim.PauliString(tableau[1])],
                         ).y_output(0)
-                    )[
-                        1 if up_to_paulis else 0 :
-                    ],  # remove sign if not needed
+                    )[1 if up_to_paulis else 0 :],  # remove sign if not needed
                 )
             ] = gates
             del compilation_dict_with_y[tableau]
@@ -636,18 +669,14 @@ def _get_single_qubits_tableau_key_from_two_qubit_tableau(
         tableau_key = (
             str(two_qubit_tableau.x_output(qubit_index))[
                 :-1  # looks like "+Z_", so remove underscore here
-            ][
-                int(up_to_paulis) :
-            ],  # remove +/- if up_to_paulis True
+            ][int(up_to_paulis) :],  # remove +/- if up_to_paulis True
             str(two_qubit_tableau.z_output(qubit_index))[:-1][int(up_to_paulis) :],
         )
     else:
         tableau_key = (
             str(two_qubit_tableau.x_output(1))[
                 0:3:2  # looks like "+_Z", so remove underscore here
-            ][
-                int(up_to_paulis) :
-            ],  # remove +/- if up_to_paulis True
+            ][int(up_to_paulis) :],  # remove +/- if up_to_paulis True
             str(two_qubit_tableau.z_output(1))[0:3:2][int(up_to_paulis) :],
         )
     return tableau_key
@@ -759,20 +788,20 @@ def _get_compilation_with_two_qubit_gates(
         for outer_start_index in range(len(unitary_block_whole) - 1, -1, -1):
             # within each sub-block of gates in unitary_block, see if there
             # is an equivalent gate expression that lets us pull something through
-            unitary_block_equiv_gates: list[
-                list[OneQubitCliffordGate]
-            ] = gate_exchange_dict.get(
-                _get_tableau_key_from_sequence_of_gates(
-                    unitary_block_whole[
-                        outer_start_index : len(unitary_block_whole) - offset
+            unitary_block_equiv_gates: list[list[OneQubitCliffordGate]] = (
+                gate_exchange_dict.get(
+                    _get_tableau_key_from_sequence_of_gates(
+                        unitary_block_whole[
+                            outer_start_index : len(unitary_block_whole) - offset
+                        ],
+                        up_to_paulis,
+                    ),
+                    [
+                        unitary_block_whole[
+                            outer_start_index : len(unitary_block_whole) - offset
+                        ]
                     ],
-                    up_to_paulis,
-                ),
-                [
-                    unitary_block_whole[
-                        outer_start_index : len(unitary_block_whole) - offset
-                    ]
-                ],
+                )
             )
 
             # e.g, for unitary_block in [[SQRT_X, S, SQRT_X], [S, SQRT_X, S], ...]

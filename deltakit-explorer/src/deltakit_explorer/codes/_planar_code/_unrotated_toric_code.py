@@ -12,12 +12,14 @@ import numpy.typing as npt
 from deltakit_circuit import Qubit, PauliX, PauliZ
 from deltakit_circuit._basic_types import Coord2D, Coord2DDelta
 from deltakit_circuit._qubit_identifiers import PauliGate
-from deltakit_explorer.codes._planar_code._planar_code import (PlanarCode,
-                                                               ScheduleType)
+from deltakit_explorer.codes._planar_code._planar_code import PlanarCode, ScheduleType
 from deltakit_explorer.codes._schedules._schedule_order import (
-    ScheduleOrder, get_x_and_z_schedules)
-from deltakit_explorer.codes._schedules._unrotated_planar_code_schedules import \
-    UnrotatedPlanarCodeSchedules
+    ScheduleOrder,
+    get_x_and_z_schedules,
+)
+from deltakit_explorer.codes._schedules._unrotated_planar_code_schedules import (
+    UnrotatedPlanarCodeSchedules,
+)
 from deltakit_explorer.codes._stabiliser import Stabiliser
 from deltakit_explorer.enums._basic_enums import DrawingColours
 from matplotlib.lines import Line2D
@@ -160,7 +162,9 @@ class UnrotatedToricCode(PlanarCode):
 
         return (x_logicals, z_logicals)
 
-    def draw_patch(self, filename: str | None = None, unrotated_code: bool = False) -> None:  # noqa: ARG002
+    def draw_patch(
+        self, filename: str | None = None, unrotated_code: bool = False
+    ) -> None:
         fig, ax = plt.subplots(nrows=1, ncols=1)
         all_qubit_x_coords = [qubit.unique_identifier.x for qubit in self.qubits]
         all_qubit_y_coords = [qubit.unique_identifier.y for qubit in self.qubits]

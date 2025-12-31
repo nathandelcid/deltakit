@@ -17,19 +17,28 @@ from deltakit_explorer._api._auth import TOKEN_VARIABLE
 from deltakit_explorer._api._gql_client import GQLClient
 from deltakit_explorer._utils import _utils as utils
 from deltakit_explorer._utils._decorators import (
-    validate_and_split_decoding, validate_and_split_simulation,
-    validate_generation)
+    validate_and_split_decoding,
+    validate_and_split_simulation,
+    validate_generation,
+)
 from deltakit_explorer._utils._logging import Logging
 from deltakit_explorer.data._data_analysis import has_leakage
-from deltakit_explorer.types._experiment_types import (QECExperiment,
-                                                       QECExperimentDefinition)
-from deltakit_explorer.types._types import (BinaryDataType, Decoder,
-                                            DecodingResult, DetectionEvents,
-                                            LeakageFlags, Measurements,
-                                            ObservableFlips,
-                                            PhysicalNoiseModel,
-                                            QubitCoordinateToDetectorMapping,
-                                            SI1000NoiseModel)
+from deltakit_explorer.types._experiment_types import (
+    QECExperiment,
+    QECExperimentDefinition,
+)
+from deltakit_explorer.types._types import (
+    BinaryDataType,
+    Decoder,
+    DecodingResult,
+    DetectionEvents,
+    LeakageFlags,
+    Measurements,
+    ObservableFlips,
+    PhysicalNoiseModel,
+    QubitCoordinateToDetectorMapping,
+    SI1000NoiseModel,
+)
 from deltakit_explorer.qpu._noise import SI1000Noise
 
 
@@ -39,9 +48,7 @@ class Client:
     noise addition, decoding, simulation, and analysis calls. To create a connection
     to a particular server, use the following syntax::
 
-        client = Client(
-            base_url="https://deltakit.riverlane.com/proxy"
-        )
+        client = Client(base_url="https://deltakit.riverlane.com/proxy")
 
     """
 
@@ -71,7 +78,7 @@ class Client:
         self._api_version = api_version
 
     @staticmethod
-    def get_instance(api_version: int=2) -> Client:
+    def get_instance(api_version: int = 2) -> Client:
         """Return a pre-configured instance of a cloud-based Deltakit client.
         If you need to connect to a custom instance, please use `Client(base_url)`
         syntax.
@@ -264,8 +271,7 @@ class Client:
             Decoding using experimental graph method::
 
                 decoder = Decoder(
-                    decoder_type=DecoderType.MWPM,
-                    use_experimental_graph=True
+                    decoder_type=DecoderType.MWPM, use_experimental_graph=True
                 )
                 client.decode_measurements(
                     measurements=measurements,
@@ -283,8 +289,8 @@ class Client:
                     parameters={
                         "decompose_errors": False,
                         "bp_rounds": 99,
-                        "ac_kappa_proportion": 0.02
-                    }
+                        "ac_kappa_proportion": 0.02,
+                    },
                 )
                 client.decode_measurements(
                     measurements=measurements,
@@ -341,7 +347,9 @@ class Client:
         query_id = Logging.info_and_generate_uid(locals())
         try:
             return self._api.defect_rates(
-                detectors, stim_circuit, query_id,
+                detectors,
+                stim_circuit,
+                query_id,
             )
         except Exception as ex:
             Logging.error(ex, query_id)
@@ -379,7 +387,10 @@ class Client:
         query_id = Logging.info_and_generate_uid(locals())
         try:
             return self._api.get_correlation_matrix_for_trimmed_data(
-                detectors, noise_floor_circuit, use_default_noise_model_edges, query_id,
+                detectors,
+                noise_floor_circuit,
+                use_default_noise_model_edges,
+                query_id,
             )
         except Exception as ex:
             Logging.error(ex, query_id)
@@ -415,7 +426,8 @@ class Client:
             Getting the matrix and plotting it::
 
                 matrix, mapping = client.get_correlation_matrix(
-                    detectors, stim_circuit,
+                    detectors,
+                    stim_circuit,
                     use_default_noise_model_edges=True,
                 )
                 plt = visualisation.correlation_matrix(matrix, mapping)
@@ -427,12 +439,12 @@ class Client:
                 stim_circuit=stim_circuit,
                 noise_model=PhysicalNoiseModel.get_floor_superconducting_noise(),
             )
-            (
-                trimmed_circuit,
-                trimmed_dets
-            ) = self.trim_circuit_and_detectors(noisy_circuit, detectors)
+            (trimmed_circuit, trimmed_dets) = self.trim_circuit_and_detectors(
+                noisy_circuit, detectors
+            )
             return self.get_correlation_matrix_for_trimmed_data(
-                trimmed_dets, trimmed_circuit, use_default_noise_model_edges)
+                trimmed_dets, trimmed_circuit, use_default_noise_model_edges
+            )
         except Exception as ex:
             Logging.error(ex, query_id)
             raise
@@ -481,7 +493,9 @@ class Client:
         query_id = Logging.info_and_generate_uid(locals())
         try:
             return self._api.trim_circuit_and_detectors(
-                stim_circuit, detectors, query_id,
+                stim_circuit,
+                detectors,
+                query_id,
             )
         except Exception as ex:
             Logging.error(ex, query_id)
@@ -521,9 +535,7 @@ class Client:
                 "Experiment object should have at least measurements or detectors. "
                 "Provided object has neither."
             )
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
         experiment.compute_detectors_and_observables()
         # trim the circuit to remove redundant detectors
         trimmed_circuit, trimmed_dets = self.trim_circuit_and_detectors(
@@ -538,8 +550,8 @@ class Client:
         )
         circuit = stim.Circuit(trimmed_circuit)
         all_detector_coordinates = {
-            key: tuple(value) for key, value in
-            circuit.get_detector_coordinates().items()
+            key: tuple(value)
+            for key, value in circuit.get_detector_coordinates().items()
         }
         return all_detector_coordinates, all_qubit_defect_rates
 
@@ -591,7 +603,7 @@ class Client:
                             param_m=6,
                             m_A_powers=[3, 1, 2],
                             m_B_powers=[3, 1, 2],
-                        )
+                        ),
                     )
                 )
 

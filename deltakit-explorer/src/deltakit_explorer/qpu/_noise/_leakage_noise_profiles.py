@@ -6,9 +6,13 @@ on leakage (pL) and relaxation (pR) probabilities parameters.
 """
 
 from deltakit_circuit import NoiseProfile
-from deltakit_circuit.gates import (TWO_QUBIT_GATES, Gate,
-                                    OneQubitCliffordGate,
-                                    OneQubitMeasurementGate, OneQubitResetGate)
+from deltakit_circuit.gates import (
+    TWO_QUBIT_GATES,
+    Gate,
+    OneQubitCliffordGate,
+    OneQubitMeasurementGate,
+    OneQubitResetGate,
+)
 from deltakit_circuit.noise_channels import Depolarise1, Leakage, Relax
 
 
@@ -35,7 +39,6 @@ def two_qubit_gate_leakage_noise_profile(pL: float) -> NoiseProfile:
                 tuple(TWO_QUBIT_GATES), gate_qubit_count=2
             )
         ]
-
 
     return leakage_two_qubit_gate
 

@@ -11,16 +11,26 @@ from collections.abc import Iterable, Mapping, Sequence
 import stim
 from deltakit_circuit import Circuit, Coordinate, GateLayer, Qubit
 from deltakit_circuit._basic_maps import BASIS_TO_PAULI
-from deltakit_circuit.gates import (MPP, MX, RX, I, OneQubitCliffordGate,
-                                    OneQubitMeasurementGate, OneQubitResetGate,
-                                    TwoOperandGate)
+from deltakit_circuit.gates import (
+    MPP,
+    MX,
+    RX,
+    I,
+    OneQubitCliffordGate,
+    OneQubitMeasurementGate,
+    OneQubitResetGate,
+    TwoOperandGate,
+)
 from deltakit_explorer.codes._css._detectors import (
     _calculate_detector_coordinates,
-    get_between_round_detectors_and_coordinate_shifts)
+    get_between_round_detectors_and_coordinate_shifts,
+)
 from deltakit_explorer.codes._css._observables import _construct_observables
 from deltakit_explorer.codes._css._stabiliser_helper_functions import (
-    _get_data_qubits_from_stabilisers, _transform_stabiliser,
-    get_entangling_layer)
+    _get_data_qubits_from_stabilisers,
+    _transform_stabiliser,
+    get_entangling_layer,
+)
 from deltakit_explorer.codes._stabiliser import Stabiliser
 
 
@@ -99,9 +109,13 @@ class CSSStage:
         stabilisers: Sequence[Sequence[Stabiliser]] | None = None,
         num_rounds: int = 0,
         first_round_measurements: Sequence[MPP | OneQubitMeasurementGate] | None = None,
-        first_round_gates: Iterable[OneQubitCliffordGate | TwoOperandGate] | None = None,
+        first_round_gates: Iterable[OneQubitCliffordGate | TwoOperandGate]
+        | None = None,
         final_round_resets: Iterable[OneQubitResetGate] | None = None,
-        observable_definitions: Mapping[int, Iterable[Qubit | MPP | OneQubitMeasurementGate]] | None = None,
+        observable_definitions: Mapping[
+            int, Iterable[Qubit | MPP | OneQubitMeasurementGate]
+        ]
+        | None = None,
         use_ancilla_qubits: bool | None = None,
     ):
         self._stabilisers = () if stabilisers is None else stabilisers
@@ -123,9 +137,7 @@ class CSSStage:
             raise ValueError(msg)
 
         self._first_round_measurements = (
-            ()
-            if first_round_measurements is None
-            else tuple(first_round_measurements)
+            () if first_round_measurements is None else tuple(first_round_measurements)
         )
         self._first_round_gates = (
             frozenset() if first_round_gates is None else frozenset(first_round_gates)
@@ -544,8 +556,7 @@ class CSSStage:
             )
             layers.append(
                 Circuit(
-                    self._construct_syndrome_extraction_layers()
-                    + detectors,
+                    self._construct_syndrome_extraction_layers() + detectors,
                     iterations=self._num_rounds - 1,
                 )
             )

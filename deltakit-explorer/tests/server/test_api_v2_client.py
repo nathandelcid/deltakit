@@ -7,13 +7,16 @@ from deltakit_explorer._api._api_v2_client import APIv2Client, Job, JobStatus
 from deltakit_explorer.enums._api_enums import DecoderType
 from deltakit_explorer.types._exceptions import ServerException
 from deltakit_explorer.types._experiment_types import QECExperimentDefinition
-from deltakit_explorer.types._types import (Decoder, DetectionEvents, ObservableFlips,
-                                            PhysicalNoiseModel,
-                                            SI1000NoiseModel)
+from deltakit_explorer.types._types import (
+    Decoder,
+    DetectionEvents,
+    ObservableFlips,
+    PhysicalNoiseModel,
+    SI1000NoiseModel,
+)
 
 
 class TestExecute:
-
     def test_execute_success(self, mocker):
         client = APIv2Client("http://localhost")
         job_submit = Job(
@@ -78,7 +81,6 @@ def test_generate_circuit_calls_execute(mocker):
 
 
 class TestAPICalls:
-
     def test_simulate_circuit_leakage(self, mocker):
         client = APIv2Client("http://localhost")
         mocker.patch.object(
@@ -191,7 +193,6 @@ class TestAPICalls:
 
 
 class TestServiceCalls:
-
     def test_get_job_status_ok(self, mocker):
         url = "https://unknown/url"
         client = APIv2Client(url)

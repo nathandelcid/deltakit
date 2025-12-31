@@ -156,7 +156,13 @@ class TestMonomial:
         ],
     )
     def test_Monomial_init_adjusts_x_pow_y_pow_to_modulo_l_m_respectively(
-        self, x_pow, y_pow, l, m, exp_x_pow, exp_y_pow  # noqa: E741
+        self,
+        x_pow,
+        y_pow,
+        l,
+        m,
+        exp_x_pow,
+        exp_y_pow,
     ):
         mon = Monomial(x_pow, y_pow, l, m)
         assert mon.x_pow == exp_x_pow

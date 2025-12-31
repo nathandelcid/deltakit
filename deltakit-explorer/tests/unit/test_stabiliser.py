@@ -261,7 +261,7 @@ class TestStabiliserClass:
                     ancilla_qubit=3,
                 ),
                 {PauliX(1), PauliZ(2)},
-                'Stabiliser((PauliX(Qubit(1)), None, PauliZ(Qubit(2))), Qubit(3))',
+                "Stabiliser((PauliX(Qubit(1)), None, PauliZ(Qubit(2))), Qubit(3))",
             ),
             (
                 Stabiliser(
@@ -273,7 +273,7 @@ class TestStabiliserClass:
                     ancilla_qubit=Coord2D(0, 2),
                 ),
                 {PauliX(Coord2D(1, 1)), PauliZ(Coord2D(1, 3))},
-                'Stabiliser((PauliX(Qubit(Coord2D(1, 1))), None, PauliZ(Qubit(Coord2D(1, 3)))), Qubit(Coord2D(0, 2)))',
+                "Stabiliser((PauliX(Qubit(Coord2D(1, 1))), None, PauliZ(Qubit(Coord2D(1, 3)))), Qubit(Coord2D(0, 2)))",
             ),
         ],
     )

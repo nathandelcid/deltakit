@@ -2,33 +2,51 @@
 import itertools
 
 import pytest
-from deltakit_circuit import (Circuit, GateLayer,
-                              MeasurementRecord, Observable, PauliX, PauliY,
-                              PauliZ, Qubit)
+from deltakit_circuit import (
+    Circuit,
+    GateLayer,
+    MeasurementRecord,
+    Observable,
+    PauliX,
+    PauliY,
+    PauliZ,
+    Qubit,
+)
 from deltakit_circuit._basic_types import Coord2D
 from deltakit_circuit.gates import C_XYZ, MX, MZ, RX, RZ, SWAP, H, S
 from deltakit_explorer.codes._css._css_stage import CSSStage
-from deltakit_explorer.codes._css._detectors import \
-    _calculate_detector_coordinates
-from deltakit_explorer.codes._planar_code._rotated_planar_code import \
-    RotatedPlanarCode
+from deltakit_explorer.codes._css._detectors import _calculate_detector_coordinates
+from deltakit_explorer.codes._planar_code._rotated_planar_code import RotatedPlanarCode
 from deltakit_explorer.codes._stabiliser import Stabiliser
 
-from ._data_css_stage import (CSSStageTestComponents, data_x_stage,
-                              data_z_stage, example_simultaneous_stabilisers,
-                              final_round_with_mpps_stage, half_transv_h_stage,
-                              measurements_and_observables_only_stage,
-                              resets_only_stage, stabiliser_meas_stage,
-                              stabiliser_reset_stage,
-                              stabiliser_reset_stage_many_rounds,
-                              stabiliser_stage, stabiliser_stage_spaced,
-                              transv_h_stage, transv_h_with_reset_stage,
-                              transv_swap_stage, transv_swap_with_reset_stage)
+from ._data_css_stage import (
+    CSSStageTestComponents,
+    data_x_stage,
+    data_z_stage,
+    example_simultaneous_stabilisers,
+    final_round_with_mpps_stage,
+    half_transv_h_stage,
+    measurements_and_observables_only_stage,
+    resets_only_stage,
+    stabiliser_meas_stage,
+    stabiliser_reset_stage,
+    stabiliser_reset_stage_many_rounds,
+    stabiliser_stage,
+    stabiliser_stage_spaced,
+    transv_h_stage,
+    transv_h_with_reset_stage,
+    transv_swap_stage,
+    transv_swap_with_reset_stage,
+)
 from ._data_css_stage_full_stage import (
-    full_stage_1_round, full_stage_1_round_with_mpps, full_stage_4_rounds,
+    full_stage_1_round,
+    full_stage_1_round_with_mpps,
+    full_stage_4_rounds,
     full_stage_many_rounds_no_ancilla,
-    full_stage_many_rounds_not_using_ancilla, full_stage_many_rounds_spaced,
-    full_stage_many_rounds_spaced_no_ancilla)
+    full_stage_many_rounds_not_using_ancilla,
+    full_stage_many_rounds_spaced,
+    full_stage_many_rounds_spaced_no_ancilla,
+)
 
 all_example_stage_comps = [
     stabiliser_stage,
@@ -61,26 +79,19 @@ class TestCalculateDetectorCoordinates:
         "stabilisers, expected_coordinates",
         [
             (
-
                 [
                     Stabiliser([PauliX(0)], Qubit(1)),
                     Stabiliser([PauliX(2)], Qubit(3)),
                     Stabiliser([PauliX(10)], Qubit(5)),
                 ],
-                (
-                    (1, 0),
-                    (3, 0),
-                    (5, 0)),
+                ((1, 0), (3, 0), (5, 0)),
             ),
             (
                 [
                     Stabiliser([PauliX(0)], Qubit((1, 1, 7))),
                     Stabiliser([PauliX(2)], Qubit((3, 0, 2))),
                 ],
-                (
-                    (1.0, 1.0, 7.0, 0.0),
-                    (3.0, 0.0, 2.0, 0.0)
-                ),
+                ((1.0, 1.0, 7.0, 0.0), (3.0, 0.0, 2.0, 0.0)),
             ),
             (
                 [
@@ -88,60 +99,42 @@ class TestCalculateDetectorCoordinates:
                     Stabiliser([PauliX(2)], Qubit((3, 0, 2))),
                     Stabiliser([PauliX((2, 2))], Qubit((3, 0))),
                 ],
-                (
-                    (0, 0),
-                    (1, 0),
-                    (2, 0)),
+                ((0, 0), (1, 0), (2, 0)),
             ),
             (
                 [
                     Stabiliser([PauliX(0), PauliY(1)]),
                     Stabiliser([PauliX(2), PauliZ(3)], Qubit((3, 0, 2))),
                 ],
-                (
-                   (0.5, 0),
-                   (2.5, 0)
-                ),
+                ((0.5, 0), (2.5, 0)),
             ),
             (
                 [
                     Stabiliser([PauliX(0), PauliZ(1)], Qubit((1, 1, 7))),
                     Stabiliser([PauliX((2, 2, 2)), PauliX((0, 2, 3))], Qubit((3, 0))),
                 ],
-                (
-                   (1.0, 1.0, 7.0, 0.0),
-                   (1.0, 2.0, 2.5, 0.0)
-                ),
+                ((1.0, 1.0, 7.0, 0.0), (1.0, 2.0, 2.5, 0.0)),
             ),
             (
                 [
                     Stabiliser([PauliX((2, 2, 2)), PauliX((0, 2, 3))], Qubit((3, 0))),
                     Stabiliser([PauliX(0), PauliZ(1)], Qubit((1, 1, 7))),
                 ],
-                (
-                   (0, 0),
-                   (1, 0)
-                ),
+                ((0, 0), (1, 0)),
             ),
             (
                 [
                     Stabiliser([PauliX((2, 2, 2)), PauliX((0, 2, 3))], Qubit((3, 0))),
                     Stabiliser([PauliX(0), PauliZ(1)], Qubit(("apple", 0))),
                 ],
-                (
-                    (0, 0),
-                    (1, 0)
-                ),
+                ((0, 0), (1, 0)),
             ),
             (
                 [
                     Stabiliser([PauliX(0), PauliY(3)]),
                     Stabiliser([PauliX(1), PauliZ(2)], Qubit((3, 0, 2))),
                 ],
-                (
-                    (1.2, 0),
-                    (1.8, 0)
-                ),
+                ((1.2, 0), (1.8, 0)),
             ),
             (
                 [
@@ -149,11 +142,7 @@ class TestCalculateDetectorCoordinates:
                     Stabiliser([PauliX(0), PauliY(3)]),
                     Stabiliser([PauliX(1), PauliZ(2)], Qubit((3, 0, 2))),
                 ],
-                (
-                    (0, 0),
-                    (1, 0),
-                    (2, 0)
-                ),
+                ((0, 0), (1, 0), (2, 0)),
             ),
             (
                 [
@@ -161,10 +150,7 @@ class TestCalculateDetectorCoordinates:
                     Stabiliser([PauliX(0), PauliY(3)]),
                     Stabiliser([PauliX(1), PauliZ((2, 1))]),
                 ],
-                (
-                    (0, 0),
-                    (1, 0)
-                ),
+                ((0, 0), (1, 0)),
             ),
             (
                 [
@@ -172,10 +158,7 @@ class TestCalculateDetectorCoordinates:
                     Stabiliser([PauliX(0), PauliY(3)]),
                     Stabiliser([PauliX(1), PauliZ("test")]),
                 ],
-                (
-                    (0, 0),
-                    (1, 0)
-                ),
+                ((0, 0), (1, 0)),
             ),
         ],
     )
@@ -646,7 +629,10 @@ class TestTransversalHStage:
             final_round_resets=stage._final_round_resets,
         )
         assert stage.first_round == Circuit(
-            [GateLayer(stage._first_round_gates), *stage_without_trv_h.first_round.layers]
+            [
+                GateLayer(stage._first_round_gates),
+                *stage_without_trv_h.first_round.layers,
+            ]
         )
 
 
@@ -714,7 +700,10 @@ class TestTransversalSWAPStage:
             final_round_resets=stage._final_round_resets,
         )
         assert stage.first_round == Circuit(
-            [GateLayer(stage._first_round_gates), *stage_without_trv_h.first_round.layers]
+            [
+                GateLayer(stage._first_round_gates),
+                *stage_without_trv_h.first_round.layers,
+            ]
         )
 
 

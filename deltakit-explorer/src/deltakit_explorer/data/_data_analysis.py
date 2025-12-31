@@ -1,6 +1,7 @@
 # (c) Copyright Riverlane 2020-2025.
 """Module contains functions to perform analysis of data assets to perform efficient
 data routing between client and service."""
+
 from __future__ import annotations
 
 import re
@@ -33,9 +34,7 @@ def get_binary_data_size(width: int, shots: int, data_format: DataFormat) -> int
         length = 2 * width
     else:
         msg = f"Format {data_format} is not supported for binary data"
-        raise NotImplementedError(
-            msg
-        )
+        raise NotImplementedError(msg)
     return length * shots
 
 

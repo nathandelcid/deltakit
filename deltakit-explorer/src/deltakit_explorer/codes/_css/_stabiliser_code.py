@@ -12,8 +12,9 @@ from deltakit_circuit import Qubit
 from deltakit_circuit._basic_types import PauliBasis
 from deltakit_circuit._qubit_identifiers import PauliGate
 from deltakit_explorer.codes._css._css_stage import CSSStage
-from deltakit_explorer.codes._css._stabiliser_helper_functions import \
-    pauli_gates_to_stim_pauli_string
+from deltakit_explorer.codes._css._stabiliser_helper_functions import (
+    pauli_gates_to_stim_pauli_string,
+)
 from deltakit_explorer.codes._stabiliser import Stabiliser
 
 
@@ -244,9 +245,7 @@ class StabiliserCode(ABC):
             corresponding to one logical X operator.
         """
         return (
-            self._x_logical_operators
-            if self._x_logical_operators is not None
-            else ()
+            self._x_logical_operators if self._x_logical_operators is not None else ()
         )
 
     @x_logical_operators.setter
@@ -287,9 +286,7 @@ class StabiliserCode(ABC):
             corresponding to one logical Z operator.
         """
         return (
-            self._z_logical_operators
-            if self._z_logical_operators is not None
-            else ()
+            self._z_logical_operators if self._z_logical_operators is not None else ()
         )
 
     @z_logical_operators.setter

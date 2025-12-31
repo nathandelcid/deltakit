@@ -1,27 +1,48 @@
 from collections.abc import Callable, Sequence
 
 from deltakit_circuit import Circuit, Qubit
-from deltakit_circuit.gates import (CXSWAP, CZSWAP, ISWAP, ISWAP_DAG,
-                                    MEASUREMENT_GATE_MAPPING,
-                                    ONE_QUBIT_GATE_MAPPING, RESET_GATE_MAPPING,
-                                    TWO_QUBIT_GATE_MAPPING, Gate,
-                                    SymmetricTwoQubitGate)
+from deltakit_circuit.gates import (
+    CXSWAP,
+    CZSWAP,
+    ISWAP,
+    ISWAP_DAG,
+    MEASUREMENT_GATE_MAPPING,
+    ONE_QUBIT_GATE_MAPPING,
+    RESET_GATE_MAPPING,
+    TWO_QUBIT_GATE_MAPPING,
+    Gate,
+    SymmetricTwoQubitGate,
+)
 from deltakit_explorer.qpu._circuits._circuit_functions import merge_layers
-from deltakit_explorer.qpu._native_gate_set import (NativeGateSetAndTimes,
-                                                    OneQubitCliffordGate,
-                                                    TwoOperandGate)
+from deltakit_explorer.qpu._native_gate_set import (
+    NativeGateSetAndTimes,
+    OneQubitCliffordGate,
+    TwoOperandGate,
+)
 
 from ._tableau_functions import (
-    CZ_TO_GATE_DICT, CZSWAP_TO_GATE_DICT, GATE_TO_CZ_DICT, GATE_TO_CZSWAP_DICT,
-    MEAS_COMPILATION_LOOKUP_DICT, RESET_COMPILATION_LOOKUP_DICT,
-    CompilationData, EquivalentTableauDict, SpecialGateDict, TableauDict,
-    TwoQubitGateCompilationLookupDict, TwoQubitGateDictEntry,
-    _create_circuit_from_compilation_data, _extract_structure_from_circuit,
-    _get_compilation_dict, _get_compilation_with_measurement_after_unitaries,
+    CZ_TO_GATE_DICT,
+    CZSWAP_TO_GATE_DICT,
+    GATE_TO_CZ_DICT,
+    GATE_TO_CZSWAP_DICT,
+    MEAS_COMPILATION_LOOKUP_DICT,
+    RESET_COMPILATION_LOOKUP_DICT,
+    CompilationData,
+    EquivalentTableauDict,
+    SpecialGateDict,
+    TableauDict,
+    TwoQubitGateCompilationLookupDict,
+    TwoQubitGateDictEntry,
+    _create_circuit_from_compilation_data,
+    _extract_structure_from_circuit,
+    _get_compilation_dict,
+    _get_compilation_with_measurement_after_unitaries,
     _get_compilation_with_projectors_before_unitaries,
-    _get_compilation_with_two_qubit_gates, _get_tableau_as_key,
+    _get_compilation_with_two_qubit_gates,
+    _get_tableau_as_key,
     _get_tableau_from_sequence_of_1q_gates,
-    _get_tableau_key_from_sequence_of_gates)
+    _get_tableau_key_from_sequence_of_gates,
+)
 
 
 def _compile_to_native_gates_plus_unitaries(
@@ -565,18 +586,18 @@ def _compile_two_qubit_gates_to_native_gates(
                             layer_index_lookup[i] += delta
 
                 # update unitary blocks
-                comp_data.unitary_blocks[
-                    qubit1_entry[1]["preceding"]
-                ] = compiled_updated_unitaries[0]
-                comp_data.unitary_blocks[
-                    qubit1_entry[1]["succeeding"]
-                ] = compiled_updated_unitaries[1]
-                comp_data.unitary_blocks[
-                    qubit2_entry[1]["preceding"]
-                ] = compiled_updated_unitaries[2]
-                comp_data.unitary_blocks[
-                    qubit2_entry[1]["succeeding"]
-                ] = compiled_updated_unitaries[3]
+                comp_data.unitary_blocks[qubit1_entry[1]["preceding"]] = (
+                    compiled_updated_unitaries[0]
+                )
+                comp_data.unitary_blocks[qubit1_entry[1]["succeeding"]] = (
+                    compiled_updated_unitaries[1]
+                )
+                comp_data.unitary_blocks[qubit2_entry[1]["preceding"]] = (
+                    compiled_updated_unitaries[2]
+                )
+                comp_data.unitary_blocks[qubit2_entry[1]["succeeding"]] = (
+                    compiled_updated_unitaries[3]
+                )
 
                 new_two_qubit_dict[
                     (

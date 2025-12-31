@@ -1,6 +1,5 @@
 # (c) Copyright Riverlane 2020-2025.
-"""This file contains types to support QEC experiments.
-"""
+"""This file contains types to support QEC experiments."""
 
 from __future__ import annotations
 
@@ -10,11 +9,21 @@ from typing import Any
 
 import stim
 from deltakit_circuit.gates import PauliBasis
-from deltakit_explorer.enums._api_enums import (DataFormat, QECECodeType,
-                                                QECExperimentType)
-from deltakit_explorer.types._types import (BinaryDataType, CircuitParameters,
-                                            DetectionEvents, JSONable, LeakageFlags,
-                                            Measurements, ObservableFlips)
+from deltakit_explorer.enums._api_enums import (
+    DataFormat,
+    QECECodeType,
+    QECExperimentType,
+)
+from deltakit_explorer.types._types import (
+    BinaryDataType,
+    CircuitParameters,
+    DetectionEvents,
+    JSONable,
+    LeakageFlags,
+    Measurements,
+    ObservableFlips,
+)
+
 
 @dataclass
 class QECExperiment:
@@ -67,9 +76,7 @@ class QECExperiment:
                 "sweep_path and sweep_format should be both provided, "
                 "or should both be None."
             )
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
         circuit = stim.Circuit.from_file(stim_path)
         measurements = Measurements(
             measurements_path,
@@ -93,14 +100,11 @@ class QECExperiment:
         """If measurements and a circuit are provided, ensure that
         detectors and observables are computed."""
         if (
-            (self.detectors is None or self.observables is None)
-            and self.measurements is not None
-        ):
-            dets, obs = (
-                self.measurements.to_detectors_and_observables(
-                    stim_circuit=self.noisy_circuit,
-                    sweep_bits=self.sweep_bits,
-                )
+            self.detectors is None or self.observables is None
+        ) and self.measurements is not None:
+            dets, obs = self.measurements.to_detectors_and_observables(
+                stim_circuit=self.noisy_circuit,
+                sweep_bits=self.sweep_bits,
             )
             if self.detectors is None:
                 self.detectors = dets
@@ -141,9 +145,7 @@ class QECExperimentDefinition(JSONable):
 
     @staticmethod
     def get_repetition_z_quantum_memory(
-        distance: int,
-        num_rounds: int,
-        basis_gates: list[str] | None = None
+        distance: int, num_rounds: int, basis_gates: list[str] | None = None
     ) -> QECExperimentDefinition:
         """Convenience method to quickly define a Z-memory
         repetition code experiment."""
@@ -158,9 +160,7 @@ class QECExperimentDefinition(JSONable):
 
     @staticmethod
     def get_rotated_planar_z_quantum_memory(
-        distance: int,
-        num_rounds: int,
-        basis_gates: list[str] | None = None
+        distance: int, num_rounds: int, basis_gates: list[str] | None = None
     ) -> QECExperimentDefinition:
         """Convenience method to quickly define a Z-memory
         (d x d)-rotated planar code experiment."""

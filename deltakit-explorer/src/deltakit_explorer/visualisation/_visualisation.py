@@ -1,6 +1,5 @@
 # (c) Copyright Riverlane 2020-2025.
-"""`visualisation` module aggregates data plotting methods.
-"""
+"""`visualisation` module aggregates data plotting methods."""
 
 from __future__ import annotations
 
@@ -37,7 +36,8 @@ def correlation_matrix(
         Collect the data for a correlation matrix plot::
 
             matrix, mapping = client.get_correlation_matrix(
-                detectors, stim_circuit,
+                detectors,
+                stim_circuit,
                 use_default_noise_model_edges=True,
             )
             plt = correlation_matrix(matrix, mapping)
@@ -48,7 +48,8 @@ def correlation_matrix(
     # the qubit labels such that the labels are in the middle of the major
     # ticks. Sort the labels as they are not guaranteed to be in order.
     minor_ticks_in_major = len(
-        next(iter(qubit_to_detector_mapping.detector_map.values())))
+        next(iter(qubit_to_detector_mapping.detector_map.values()))
+    )
     num_major_ticks = len(qubit_to_detector_mapping.detector_map.keys())
     num_ticks = minor_ticks_in_major * num_major_ticks
     num_minor_ticks = num_ticks - num_major_ticks
@@ -57,7 +58,8 @@ def correlation_matrix(
     label_indices = [mid_im + (ticks_per_major * i) for i in range(num_major_ticks)]
     sorted_labels = (
         sorted(qubit_to_detector_mapping.detector_map.keys())
-        if len(labels) == 0 else labels
+        if len(labels) == 0
+        else labels
     )
 
     def format_func(_, tick_number):
@@ -82,6 +84,7 @@ def correlation_matrix(
     axes.grid(which="minor", color="#AAAAAA", linestyle="--", alpha=0.2)
     return plt
 
+
 def _rotate_defect_rate_points(
     detector_coords: dict,
     defect_rates: dict,
@@ -103,11 +106,10 @@ def _rotate_defect_rate_points(
 
     offset_defect_rates = {}
     for coord, defect_rate in rotated_coord_defect_rates.items():
-        offset_defect_rates[
-            (coord[0] - x_offset, coord[1] - y_offset)
-        ] = defect_rate
+        offset_defect_rates[(coord[0] - x_offset, coord[1] - y_offset)] = defect_rate
 
     return offset_defect_rates
+
 
 def defect_diagram(all_detector_coords: dict, all_defect_rates: dict):
     """Plots defect rates patch diagram given detector coordinates and
@@ -121,9 +123,7 @@ def defect_diagram(all_detector_coords: dict, all_defect_rates: dict):
         matplotlib.pyplot: matplotlib module
     """
     # rotate coords
-    defect_rates = _rotate_defect_rate_points(
-        all_detector_coords, all_defect_rates
-    )
+    defect_rates = _rotate_defect_rate_points(all_detector_coords, all_defect_rates)
     all_dr_means = defect_rates.values()
     cmap_min, cmap_max = min(all_dr_means), max(all_dr_means)
 
@@ -158,12 +158,9 @@ def defect_diagram(all_detector_coords: dict, all_defect_rates: dict):
         (num_rows - 1 - 1 - 0.5, x - 1, first_row[x])
         for x in np.where(first_row != 0)[0]
     ]
-    bottom_sc_indices = [
-        (-0.5, x - 1, last_row[x]) for x in np.where(last_row != 0)[0]
-    ]
+    bottom_sc_indices = [(-0.5, x - 1, last_row[x]) for x in np.where(last_row != 0)[0]]
     left_sc_indices = [
-        (num_cols - x - 1 - 1, -0.5, first_col[x])
-        for x in np.where(first_col != 0)[0]
+        (num_cols - x - 1 - 1, -0.5, first_col[x]) for x in np.where(first_col != 0)[0]
     ]
     right_sc_indices = [
         (num_cols - x - 1 - 1, num_cols - 1 - 1 - 0.5, last_col[x])
@@ -185,8 +182,7 @@ def defect_diagram(all_detector_coords: dict, all_defect_rates: dict):
     axes.set_xticks([])
     image.axes.invert_yaxis()
     cbar = axes.figure.colorbar(
-        image, ax=axes, shrink=1, orientation="vertical",
-        pad=0.2, label="Defect rate"
+        image, ax=axes, shrink=1, orientation="vertical", pad=0.2, label="Defect rate"
     )
     cbar.set_ticks([0.1, 0.25])
 
@@ -245,21 +241,20 @@ def defect_rates(
             experiments = [
                 QECExperiment.from_circuit_and_measurements(
                     folder / "circuit_noisy.stim",
-                    folder / "measurements.b8", DataFormat.B8,
-                    folder / "sweep.b8", DataFormat.B8,
+                    folder / "measurements.b8",
+                    DataFormat.B8,
+                    folder / "sweep.b8",
+                    DataFormat.B8,
                 )
-                for folder
-                in z_and_x_experiment_folders
+                for folder in z_and_x_experiment_folders
             ]
             all_rates = []
             for experiment in experiments:
-                _, rates = client.get_experiment_detectors_and_defect_rates(
-                    experiment
-                )
+                _, rates = client.get_experiment_detectors_and_defect_rates(experiment)
                 all_rates.append(rates)
             defect_rates(
                 all_rates,
-                w2_det_coords=set({(5., 6.), (1., 4.), (4., 3.), (2., 7.)})
+                w2_det_coords=set({(5.0, 6.0), (1.0, 4.0), (4.0, 3.0), (2.0, 7.0)}),
             )
     """
     # ensure these are floats!
@@ -272,24 +267,26 @@ def defect_rates(
                 w2_avg.append(defect_rate)
                 plt.plot(
                     range(1, len(defect_rate) + 1),
-                    defect_rate, color="#ff7500", alpha=0.3
+                    defect_rate,
+                    color="#ff7500",
+                    alpha=0.3,
                 )
             else:
                 w4_avg.append(defect_rate)
                 plt.plot(
                     range(1, len(defect_rate) + 1),
-                    defect_rate, color="#006f62", alpha=0.3
+                    defect_rate,
+                    color="#006f62",
+                    alpha=0.3,
                 )
     w2_detectors = np.mean(w2_avg, axis=0)
     w4_detectors = np.mean(w4_avg, axis=0)
     plt.plot(
-        range(1, len(w4_detectors) + 1),
-        w4_detectors,
-        color="#006f62", label="Weight-4")
+        range(1, len(w4_detectors) + 1), w4_detectors, color="#006f62", label="Weight-4"
+    )
     plt.plot(
-        range(1, len(w2_detectors) + 1),
-        w2_detectors,
-        color="#ff7500", label="Weight-2")
+        range(1, len(w2_detectors) + 1), w2_detectors, color="#ff7500", label="Weight-2"
+    )
     plt.xlabel("Round")
     plt.xticks(range(1, len(w4_detectors) + 1))
     plt.ylim(0, 0.25)

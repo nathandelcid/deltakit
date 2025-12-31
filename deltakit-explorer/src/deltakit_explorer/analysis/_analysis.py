@@ -10,6 +10,7 @@ import numpy as np
 import numpy.typing as npt
 from packaging.version import Version
 
+
 @deprecated(
     reason="A better function is now available.",
     replaced_by="deltakit.explorer.analysis.compute_logical_error_per_round",
@@ -152,7 +153,6 @@ def calculate_lep_and_lep_stddev(
     lep_stddev = np.sqrt(lep * (1 - lep) / shots)
 
     return lep, lep_stddev
-
 
 
 @deprecated(

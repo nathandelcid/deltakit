@@ -1,14 +1,19 @@
 # (c) Copyright Riverlane 2020-2025.
 import numpy as np
 import pytest
-from deltakit_circuit import (Circuit, GateLayer, NoiseContext, Qubit,
-                              before_measure_flip_probability, gates,
-                              measurement_noise_profile)
+from deltakit_circuit import (
+    Circuit,
+    GateLayer,
+    NoiseContext,
+    Qubit,
+    before_measure_flip_probability,
+    gates,
+    measurement_noise_profile,
+)
 from deltakit_circuit.gates import CX, X, Y, Z
 from deltakit_circuit.noise_channels import Depolarise1, PauliChannel1
 from deltakit_explorer.qpu._noise import NoiseParameters
-from deltakit_explorer.qpu._noise._noise_parameters import \
-    _idle_noise_from_t1_t2
+from deltakit_explorer.qpu._noise._noise_parameters import _idle_noise_from_t1_t2
 
 
 class TestNoiseParameters:
@@ -63,7 +68,6 @@ class TestNoiseParameters:
 
 
 class TestIdleNoiseFromT1T2:
-
     def test_invalid_t1_t2(self):
         t1 = 1
         t2 = 3 * t1
@@ -99,8 +103,8 @@ class TestIdleNoiseFromT1T2:
         noise_channel_result = _idle_noise_from_t1_t2(t1, t2)(noise_context, t)
 
         assert isinstance(noise_channel_result, PauliChannel1)
-        p_X = p_Y = (1 - np.exp(-t/t1)) / 4
-        p_Z = (1 - np.exp(-t/t2)) / 2 - (1 - np.exp(-t/t1)) / 4
+        p_X = p_Y = (1 - np.exp(-t / t1)) / 4
+        p_Z = (1 - np.exp(-t / t2)) / 2 - (1 - np.exp(-t / t1)) / 4
         np.testing.assert_allclose(noise_channel_result.probabilities, [p_X, p_Y, p_Z])
 
     def test_t1_equals_t2(self):
@@ -115,4 +119,6 @@ class TestIdleNoiseFromT1T2:
         # `Depolarise1` applies a randomly chosen Pauli with a given probability $p / 3$,
         # so the appropriate $p$ to use is $3 * (1 - \exp(-t/t1)) / 4 = 0.75 * (1 - \exp(-t/t1)$
         assert isinstance(noise_channel_result, Depolarise1)
-        np.testing.assert_allclose(noise_channel_result.probabilities, 0.75 * (1.0 - np.exp(-t/t)))
+        np.testing.assert_allclose(
+            noise_channel_result.probabilities, 0.75 * (1.0 - np.exp(-t / t))
+        )

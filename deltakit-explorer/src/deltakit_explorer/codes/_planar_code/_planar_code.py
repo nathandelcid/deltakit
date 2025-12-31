@@ -3,6 +3,7 @@
 This module contains common implementation parts for planar codes.
 Other planar code classes derive from PlanarCode.
 """
+
 import itertools
 import warnings
 from abc import ABC, abstractmethod
@@ -77,7 +78,7 @@ class PlanarCode(CSSCode, ABC):
         untransformed_z_schedule: tuple[Coord2DDelta, ...],
         schedule_type: ScheduleType = ScheduleType.SIMULTANEOUS,
         use_ancilla_qubits: bool = True,
-        shift: Coord2DDelta = Coord2DDelta(0, 0)
+        shift: Coord2DDelta = Coord2DDelta(0, 0),
     ):
         self._shift = shift
         self.linear_tr = np.array([[1, 0], [0, 1]])
@@ -400,7 +401,9 @@ class PlanarCode(CSSCode, ABC):
             )
         )
 
-    def draw_patch(self, filename: str | None = None, unrotated_code: bool = False) -> None:
+    def draw_patch(
+        self, filename: str | None = None, unrotated_code: bool = False
+    ) -> None:
         """
         Draw a picture of the planar code, optionally saving it to a .png file.
 

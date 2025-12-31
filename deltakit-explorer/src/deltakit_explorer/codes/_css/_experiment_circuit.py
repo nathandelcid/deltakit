@@ -10,8 +10,7 @@ from collections.abc import Sequence
 
 from deltakit_circuit import Circuit
 from deltakit_explorer.codes._css._css_stage import CSSStage
-from deltakit_explorer.codes._css._detectors import \
-    get_stage_transition_circuit
+from deltakit_explorer.codes._css._detectors import get_stage_transition_circuit
 from deltakit_explorer.qpu._circuits import merge_layers
 import itertools
 
