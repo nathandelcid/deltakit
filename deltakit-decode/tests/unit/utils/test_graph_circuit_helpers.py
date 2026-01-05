@@ -2,11 +2,12 @@
 
 import pytest
 import stim
+from deltakit_core.decoding_graphs import FixedWidthBitstring
+
 from deltakit_decode.utils._graph_circuit_helpers import (
     split_measurement_bitstring,
     stim_circuit_to_graph_dem,
 )
-from deltakit_core.decoding_graphs import FixedWidthBitstring
 
 
 def test_stim_circuit_to_graph_dem_does_not_decompose_the_rep_code():
@@ -37,7 +38,7 @@ def test_stim_circuit_to_graph_dem_does_decompose_non_rep_codes(code_task):
 
 class TestSplitMeasurementBitstring:
     @pytest.mark.parametrize(
-        "stim_circuit, measurement_bitstring, expected_split_bitstring",
+        ("stim_circuit", "measurement_bitstring", "expected_split_bitstring"),
         [
             (
                 stim.Circuit.generated(
@@ -81,7 +82,7 @@ class TestSplitMeasurementBitstring:
             assert split_bitstring_i == expected_split_bitstring_i
 
     @pytest.mark.parametrize(
-        "stim_circuit, measurement_bitstring, expected_number_of_bitstrings",
+        ("stim_circuit", "measurement_bitstring", "expected_number_of_bitstrings"),
         [
             (
                 stim.Circuit.generated(

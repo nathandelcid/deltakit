@@ -2,13 +2,14 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from collections.abc import Iterable, Iterator
 from contextlib import ExitStack
 from functools import cached_property, partial
 from itertools import islice
 from typing import Any, Generic, TypeVar
-from collections.abc import Iterable, Iterator
 from uuid import UUID, uuid4
 from warnings import warn
+
 from typing_extensions import override
 
 from deltakit_decode._base_reporter import BaseReporter
@@ -21,7 +22,6 @@ from deltakit_decode.noise_sources._generic_noise_sources import (
     NoiseModel,
     SequentialNoise,
 )
-
 
 ErrorT = TypeVar("ErrorT")
 CodeDataT = TypeVar("CodeDataT")

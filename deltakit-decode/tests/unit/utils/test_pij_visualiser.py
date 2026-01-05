@@ -3,14 +3,15 @@ import platform
 from unittest import mock
 
 import pytest
+
 from deltakit_decode.utils._pij_visualiser import plot_correlation_matrix
 
 
 class TestPijVisualiser:
     @pytest.mark.parametrize(
-        "matrix, major_minor_mapping",
+        ("matrix", "major_minor_mapping"),
         [
-            [
+            (
                 [
                     [
                         0.08155714285714295,
@@ -54,8 +55,8 @@ class TestPijVisualiser:
                     (3.0, 6.0): [2, 6],
                     (5.0, 6.0): [3, 7],
                 },
-            ],
-            [
+            ),
+            (
                 [
                     [
                         0.1174505966134559,
@@ -688,8 +689,8 @@ class TestPijVisualiser:
                     (6.0, 5.0): [2, 6, 10, 14, 18, 22],
                     (6.0, 7.0): [3, 7, 11, 15, 19, 23],
                 },
-            ],
-            [
+            ),
+            (
                 [
                     [
                         0.07825142857142861,
@@ -1324,7 +1325,7 @@ class TestPijVisualiser:
                     (3.0, 2.0): [4, 10, 16, 22],
                     (3.0, 4.0): [5, 11, 17, 23],
                 },
-            ],
+            ),
         ],
     )
     @pytest.mark.skipif(

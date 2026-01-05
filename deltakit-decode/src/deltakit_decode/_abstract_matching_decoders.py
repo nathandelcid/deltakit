@@ -2,10 +2,11 @@
 import logging
 import warnings
 from abc import ABC, abstractmethod
+from collections.abc import Sequence
+from collections.abc import Set as AbstractSet
 from functools import cached_property
 from itertools import chain, islice
-from typing import Generic, Protocol, TypeVar, TypeAlias
-from collections.abc import Sequence, Set as AbstractSet
+from typing import Generic, Protocol, TypeAlias, TypeVar
 
 import networkx as nx
 import numpy as np
@@ -19,6 +20,7 @@ from deltakit_core.decoding_graphs import (
     OrderedDecodingEdges,
     OrderedSyndrome,
 )
+
 from deltakit_decode.utils import make_logger
 
 Matching: TypeAlias = list[tuple[int, int]]

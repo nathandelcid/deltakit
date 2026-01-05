@@ -8,13 +8,13 @@ import numpy.testing as npt
 import pytest
 import stim
 from deltakit_core.decoding_graphs import dem_to_decoding_graph_and_logicals
-from deltakit_decode.utils._graph_circuit_helpers import parse_stim_circuit
+from pytest_lazy_fixtures import lf
+
 from deltakit_decode.utils._derivation_tools import (
     create_correlation_matrix,
     generate_expectation_data,
 )
-from pytest_lazy_fixtures import lf
-
+from deltakit_decode.utils._graph_circuit_helpers import parse_stim_circuit
 
 REFERENCE_DATA_DIR = (
     Path(__file__).parent.parent.parent.parent.parent / "tests" / "reference_data"
@@ -205,13 +205,13 @@ class TestDerivationTools:
         assert data == {frozenset(x): p for x, p in expected_data.items()}
 
     @pytest.mark.parametrize(
-        "samples, exp_data",
+        ("samples", "exp_data"),
         [
-            [
+            (
                 [[0, 1], [0], [1], []],
                 {(0,): 0.5, (0, 1): 0.25, (1,): 0.5},
-            ],
-            [
+            ),
+            (
                 [
                     [1, 2, 3],
                     [2],
@@ -226,16 +226,16 @@ class TestDerivationTools:
                     (2, 3): 0.5,
                     (3,): 0.75,
                 },
-            ],
-            [
+            ),
+            (
                 [[0, 1], [], [], [1], [2]],
                 {(0,): 0.2, (0, 1): 0.2, (1,): 0.4, (2,): 0.2},
-            ],
-            [
+            ),
+            (
                 [],
                 {},
-            ],
-            [
+            ),
+            (
                 [[0, 1, 2], [0]],
                 {
                     (0,): 1,
@@ -245,8 +245,8 @@ class TestDerivationTools:
                     (0, 2): 0.5,
                     (1, 2): 0.5,
                 },
-            ],
-            [
+            ),
+            (
                 [[0, 1, 2], [0, 1], [0]],
                 {
                     (0,): 1,
@@ -256,7 +256,7 @@ class TestDerivationTools:
                     (0, 2): 1 / 3,
                     (1, 2): 1 / 3,
                 },
-            ],
+            ),
         ],
     )
     @pytest.mark.parametrize("num_processes", [-1, 1, 2, 3, 4, 5, 6])
@@ -267,20 +267,20 @@ class TestDerivationTools:
         assert data == {frozenset(x): p for x, p in exp_data.items()}
 
     @pytest.mark.parametrize(
-        "samples, expected_data, only_even, only_odd",
+        ("samples", "expected_data", "only_even", "only_odd"),
         [
-            [
+            (
                 [[0], [], [1], []],
                 {(0,): 0.5, (1,): 0.5},
                 True,
                 False,
-            ],
-            [
+            ),
+            (
                 [[0], [], [1], []],
                 {},
                 False,
                 True,
-            ],
+            ),
         ],
     )
     def test_generate_expectation_data_bool_args_select_correctly(
@@ -327,9 +327,9 @@ class TestDerivationTools:
     # UserWarning occurs when circuit has no noise
     @pytest.mark.filterwarnings("ignore:Isolated logical observables:UserWarning")
     @pytest.mark.parametrize(
-        "pij_data, circuit, expected_matrix, plot_boundary_edges",
+        ("pij_data", "circuit", "expected_matrix", "plot_boundary_edges"),
         [
-            [
+            (
                 {
                     (4, 5): 0.03790345231176562,
                     (5, 9): 0.002868529500751227,
@@ -1049,8 +1049,8 @@ class TestDerivationTools:
                     ]
                 ),
                 False,
-            ],
-            [
+            ),
+            (
                 {
                     (4, 5): 0.03790345231176562,
                     (5, 9): 0.002868529500751227,
@@ -1770,8 +1770,8 @@ class TestDerivationTools:
                     ]
                 ),
                 True,
-            ],
-            [
+            ),
+            (
                 {
                     (4, 5): 0.027027027027026973,
                     (0, 4): -0.0025010484184897486,
@@ -2415,8 +2415,8 @@ class TestDerivationTools:
                     ]
                 ),
                 False,
-            ],
-            [
+            ),
+            (
                 {
                     (4, 5): 0.027027027027026973,
                     (0, 4): -0.0025010484184897486,
@@ -3060,14 +3060,14 @@ class TestDerivationTools:
                     ]
                 ),
                 True,
-            ],
-            [
+            ),
+            (
                 {},
                 stim.Circuit(),
                 np.array([]),
                 False,
-            ],
-            [
+            ),
+            (
                 {
                     (4, 5): 0.1111111111111111,
                     (1, 3): 0.1111111111111111,
@@ -3086,7 +3086,7 @@ class TestDerivationTools:
                 ),
                 np.array([]),
                 False,
-            ],
+            ),
         ],
     )
     def test_create_correlation_matrix_creates_valid_matrix_from_stim(
@@ -3100,9 +3100,9 @@ class TestDerivationTools:
     # UserWarning occurs when circuit has no noise
     @pytest.mark.filterwarnings("ignore:Isolated logical observables:UserWarning")
     @pytest.mark.parametrize(
-        "pij_data, circuit, expected_major_minor_mapping, plot_boundary_edges",
+        ("pij_data", "circuit", "expected_major_minor_mapping", "plot_boundary_edges"),
         [
-            [
+            (
                 {
                     (4, 5): 0.03790345231176562,
                     (5, 9): 0.002868529500751227,
@@ -3200,8 +3200,8 @@ class TestDerivationTools:
                     (6.0, 7.0): [3, 7, 11, 15, 19, 23],
                 },
                 False,
-            ],
-            [
+            ),
+            (
                 {
                     (4, 5): 0.03790345231176562,
                     (5, 9): 0.002868529500751227,
@@ -3299,8 +3299,8 @@ class TestDerivationTools:
                     (6.0, 7.0): [3, 7, 11, 15, 19, 23],
                 },
                 True,
-            ],
-            [
+            ),
+            (
                 {
                     (4, 5): 0.027027027027026973,
                     (0, 4): -0.0025010484184897486,
@@ -3324,8 +3324,8 @@ class TestDerivationTools:
                     (3.0, 4.0): [5, 11, 17, 23],
                 },
                 False,
-            ],
-            [
+            ),
+            (
                 {
                     (4, 5): 0.027027027027026973,
                     (0, 4): -0.0025010484184897486,
@@ -3349,14 +3349,14 @@ class TestDerivationTools:
                     (3.0, 4.0): [5, 11, 17, 23],
                 },
                 True,
-            ],
-            [
+            ),
+            (
                 {},
                 stim.Circuit(),
                 {},
                 False,
-            ],
-            [
+            ),
+            (
                 {
                     (4, 5): 0.1111111111111111,
                     (1, 3): 0.1111111111111111,
@@ -3375,7 +3375,7 @@ class TestDerivationTools:
                 ),
                 {},
                 False,
-            ],
+            ),
         ],
     )
     def test_create_correlation_matrix_creates_valid_major_minor_mapping_from_stim(
@@ -3389,14 +3389,14 @@ class TestDerivationTools:
         assert major_minor_mapping == expected_major_minor_mapping
 
     @pytest.mark.parametrize(
-        "pij_data, dem, expected_matrix",
+        ("pij_data", "dem", "expected_matrix"),
         [
-            [
+            (
                 {},
                 stim.DetectorErrorModel(""),
                 np.array([]),
-            ],
-            [
+            ),
+            (
                 {
                     (0, 0): 0.25,
                 },
@@ -3409,8 +3409,8 @@ class TestDerivationTools:
                     )
                 ),
                 np.array([[0.0]]),
-            ],
-            [
+            ),
+            (
                 {(0, 0): 0.25, (1, 1): 0.25, (0, 1): 0.5},
                 stim.DetectorErrorModel(
                     "\n".join(
@@ -3424,8 +3424,8 @@ class TestDerivationTools:
                     )
                 ),
                 np.array([[0.0, 0.5], [0.5, 0.0]]),
-            ],
-            [
+            ),
+            (
                 {(0, 0): 0.25, (1, 1): 0.25, (0, 1): 0.5},
                 stim.DetectorErrorModel(
                     "\n".join(
@@ -3439,8 +3439,8 @@ class TestDerivationTools:
                     )
                 ),
                 np.array([[0.0, 0.5], [0.5, 0.0]]),
-            ],
-            [
+            ),
+            (
                 {
                     (0, 0): 0.25,
                     (1, 1): 0.25,
@@ -3465,8 +3465,8 @@ class TestDerivationTools:
                     )
                 ),
                 np.array([[0.0, 0.2, 0.3], [0.2, 0.0, 0.1], [0.3, 0.1, 0.0]]),
-            ],
-            [
+            ),
+            (
                 {
                     (0, 0): 0.25,
                     (1, 1): 0.25,
@@ -3491,8 +3491,8 @@ class TestDerivationTools:
                     )
                 ),
                 np.array([[0.0, 0.2, 0.3], [0.2, 0.0, 0.1], [0.3, 0.1, 0.0]]),
-            ],
-            [
+            ),
+            (
                 {
                     (0, 0): 0.25,
                     (1, 1): 0.25,
@@ -3533,8 +3533,8 @@ class TestDerivationTools:
                         [0.05, 0.5, 0.35, 0.0],
                     ]
                 ),
-            ],
-            [
+            ),
+            (
                 {
                     (0, 0): 0.25,
                     (1, 1): 0.25,
@@ -3575,7 +3575,7 @@ class TestDerivationTools:
                         [0.05, 0.5, 0.35, 0.0],
                     ]
                 ),
-            ],
+            ),
         ],
     )
     def test_create_correlation_matrix_creates_valid_matrix_from_dem(
@@ -3587,10 +3587,10 @@ class TestDerivationTools:
         npt.assert_array_equal(matrix, expected_matrix)
 
     @pytest.mark.parametrize(
-        "pij_data, dem, expected_major_minor_mapping",
+        ("pij_data", "dem", "expected_major_minor_mapping"),
         [
-            [{}, stim.DetectorErrorModel(""), {}],
-            [
+            ({}, stim.DetectorErrorModel(""), {}),
+            (
                 {
                     (0, 0): 0.25,
                 },
@@ -3603,8 +3603,8 @@ class TestDerivationTools:
                     )
                 ),
                 {(1, 0): [0]},
-            ],
-            [
+            ),
+            (
                 {(0,): 0.25, (1,): 0.25, (0, 1): 0.5},
                 stim.DetectorErrorModel(
                     "\n".join(
@@ -3618,8 +3618,8 @@ class TestDerivationTools:
                     )
                 ),
                 {(1, 0): [0], (2, 0): [1]},
-            ],
-            [
+            ),
+            (
                 {(0,): 0.25, (1,): 0.25, (0, 1): 0.5},
                 stim.DetectorErrorModel(
                     "\n".join(
@@ -3633,8 +3633,8 @@ class TestDerivationTools:
                     )
                 ),
                 {(1, 0): [0, 1]},
-            ],
-            [
+            ),
+            (
                 {
                     (0,): 0.25,
                     (1,): 0.25,
@@ -3659,8 +3659,8 @@ class TestDerivationTools:
                     )
                 ),
                 {(1, 0): [0], (2, 0): [1], (3, 0): [2]},
-            ],
-            [
+            ),
+            (
                 {
                     (0,): 0.25,
                     (1,): 0.25,
@@ -3690,8 +3690,8 @@ class TestDerivationTools:
                 {
                     (1, 0): [0, 1, 2],
                 },
-            ],
-            [
+            ),
+            (
                 {
                     (0,): 0.25,
                     (1,): 0.25,
@@ -3725,8 +3725,8 @@ class TestDerivationTools:
                     )
                 ),
                 {(1, 0): [0], (2, 0): [1], (3, 0): [2], (4, 0): [3]},
-            ],
-            [
+            ),
+            (
                 {
                     (0,): 0.25,
                     (1,): 0.25,
@@ -3760,7 +3760,7 @@ class TestDerivationTools:
                     )
                 ),
                 {(1, 0): [0, 1], (2, 0): [2, 3]},
-            ],
+            ),
         ],
     )
     def test_create_correlation_matrix_creates_correct_major_minor_mapping_from_dem(
@@ -3772,9 +3772,9 @@ class TestDerivationTools:
         assert major_minor_mapping == expected_major_minor_mapping
 
     @pytest.mark.parametrize(
-        "pij_data, dem",
+        ("pij_data", "dem"),
         [
-            [
+            (
                 {
                     (0,): 0.25,
                 },
@@ -3786,8 +3786,8 @@ class TestDerivationTools:
                         ]
                     )
                 ),
-            ],
-            [
+            ),
+            (
                 {(0,): 0.25, (1,): 0.25, (0, 1): 0.5},
                 stim.DetectorErrorModel(
                     "\n".join(
@@ -3800,8 +3800,8 @@ class TestDerivationTools:
                         ]
                     )
                 ),
-            ],
-            [
+            ),
+            (
                 {
                     (0,): 0.25,
                     (1,): 0.25,
@@ -3825,8 +3825,8 @@ class TestDerivationTools:
                         ]
                     )
                 ),
-            ],
-            [
+            ),
+            (
                 {
                     (0,): 0.25,
                     (1,): 0.25,
@@ -3859,7 +3859,7 @@ class TestDerivationTools:
                         ]
                     )
                 ),
-            ],
+            ),
         ],
     )
     def test_create_correlation_matrix_plots_boundaries_only_if_plot_boundary_edges_true(
@@ -3868,12 +3868,12 @@ class TestDerivationTools:
         pij_data = {frozenset(x): p for x, p in pij_data.items()}
         graph, _ = dem_to_decoding_graph_and_logicals(dem)
         matrix, _ = create_correlation_matrix(pij_data, graph, plot_boundary_edges=True)
-        npt.assert_(np.all(np.diag(matrix) != 0))
+        assert np.all(np.diag(matrix) != 0)
 
     @pytest.mark.parametrize(
-        "pij_data, stim_circuit",
+        ("pij_data", "stim_circuit"),
         [
-            [
+            (
                 {
                     (4, 5): 0.006535947712418277,
                     (0, 4): -0.010214846916035358,
@@ -3888,7 +3888,7 @@ class TestDerivationTools:
                 stim.Circuit.from_file(
                     REFERENCE_DATA_DIR / "stim" / "circuit_multi_logicals.stim"
                 ),
-            ],
+            ),
         ],
     )
     def test_create_correlation_matrix_raises_value_error_if_time_steps_unequal(

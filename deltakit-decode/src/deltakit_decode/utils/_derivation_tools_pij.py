@@ -1,7 +1,7 @@
 # (c) Copyright Riverlane 2020-2025.
 
-from collections.abc import Callable
 import math
+from collections.abc import Callable
 from itertools import combinations
 
 import stim

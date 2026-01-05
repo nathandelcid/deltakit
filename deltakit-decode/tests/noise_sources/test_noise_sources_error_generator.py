@@ -15,7 +15,8 @@ from deltakit_core.decoding_graphs import (
     dem_to_decoding_graph_and_logicals,
     dem_to_hypergraph_and_logicals,
 )
-from deltakit_decode.utils import parse_stim_circuit
+from pytest_lazy_fixtures import lf
+
 from deltakit_decode.noise_sources import (
     EdgeProbabilityMatchingNoise,
     ExhaustiveMatchingNoise,
@@ -25,7 +26,7 @@ from deltakit_decode.noise_sources import (
     UniformMatchingNoise,
 )
 from deltakit_decode.noise_sources._generic_noise_sources import _NoiseModel
-from pytest_lazy_fixtures import lf
+from deltakit_decode.utils import parse_stim_circuit
 
 
 @pytest.fixture(scope="module")
@@ -93,7 +94,7 @@ def stim_decoding_hypergraph():
 
 class TestExhaustiveMatchingNoise:
     @pytest.mark.parametrize(
-        "graph, expected_errors",
+        ("graph", "expected_errors"),
         [
             (lf("manual_decoding_graph"), {frozenset({0, 1}), frozenset({0, 2})}),
             (lf("stim_decoding_graph"), {frozenset({0, 18}), frozenset({1, 18})}),
@@ -188,7 +189,7 @@ class TestExhaustiveWeightedMatchingNoise:
 
 class TestFixedWeightMatchingNoise:
     @pytest.mark.parametrize(
-        "graph, expected_errors",
+        ("graph", "expected_errors"),
         [
             (lf("manual_decoding_graph"), {frozenset({4, 5}), frozenset({2, 3})}),
             (lf("stim_decoding_graph"), {frozenset({2, 4}), frozenset({6, 7})}),
@@ -211,7 +212,7 @@ class TestFixedWeightMatchingNoise:
 
 class TestSampleStimNoise:
     @pytest.mark.parametrize(
-        "stim_circuit, expected_sample",
+        ("stim_circuit", "expected_sample"),
         [
             (
                 stim.Circuit("""
@@ -256,7 +257,7 @@ class TestSampleStimNoise:
 
 class TestUniformMatchingNoise:
     @pytest.mark.parametrize(
-        "noise_model, graph, expected_errors",
+        ("noise_model", "graph", "expected_errors"),
         [
             (
                 UniformMatchingNoise(0.2),
@@ -294,7 +295,7 @@ class TestUniformMatchingNoise:
 
 class TestEdgeProbabilityMatchingNoise:
     @pytest.mark.parametrize(
-        "decoding_graph, expected_errors",
+        ("decoding_graph", "expected_errors"),
         [
             (lf("stim_decoding_graph"), OrderedDecodingEdges()),
             (

@@ -2,15 +2,16 @@
 from __future__ import annotations
 
 from collections import Counter, defaultdict
+from collections.abc import Callable, Iterable, Iterator, Sequence
 from decimal import Decimal
 from functools import partial
 from itertools import chain, combinations, product, repeat
 from math import comb, floor, prod
 from typing import Any, ClassVar, TypeAlias
-from collections.abc import Callable, Iterable, Iterator, Sequence
 
 import numpy as np
 from deltakit_core.decoding_graphs import EdgeT, HyperMultiGraph, OrderedDecodingEdges
+
 from deltakit_decode.noise_sources._generic_noise_sources import (
     CombinedSequences,
     MonteCarloNoise,

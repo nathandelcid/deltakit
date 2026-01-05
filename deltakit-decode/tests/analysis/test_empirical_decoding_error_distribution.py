@@ -4,6 +4,7 @@ from itertools import product
 
 import numpy as np
 import pytest
+
 from deltakit_decode.analysis._empirical_decoding_error_distribution import (
     EmpiricalDecodingErrorDistribution,
 )
@@ -15,8 +16,7 @@ class TestEmpiricalDecodingErrorDistribution:
             EmpiricalDecodingErrorDistribution(5),
             EmpiricalDecodingErrorDistribution(1),
             EmpiricalDecodingErrorDistribution(12),
-        ],
-        scope="function",
+        ]
     )
     def empirical_decoding_error_distribution(
         self, request
@@ -277,7 +277,7 @@ class TestEmpiricalDecodingErrorDistribution:
             assert distr1[error] == distr2[error]
 
     @pytest.mark.parametrize(
-        "expected_errors_per_logical, error_distribution_dict",
+        ("expected_errors_per_logical", "error_distribution_dict"),
         [
             (
                 [1, 3, 2],
@@ -305,7 +305,7 @@ class TestEmpiricalDecodingErrorDistribution:
         assert np.array_equal(distr.fails_per_logical, expected_errors_per_logical)
 
     @pytest.mark.parametrize(
-        "expected_error_counts, error_distribution_dict",
+        ("expected_error_counts", "error_distribution_dict"),
         [
             (
                 [5, 6, 9],

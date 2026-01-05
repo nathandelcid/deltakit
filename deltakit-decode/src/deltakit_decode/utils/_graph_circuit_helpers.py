@@ -2,16 +2,15 @@
 """Module containing useful functions to aid in the interaction of decoding graphs and Stim circuits."""
 
 import stim
+from deltakit_circuit import Circuit, trim_detectors
 from deltakit_core.decoding_graphs import (
     DecodingEdge,
     DemParser,
     DetectorCounter,
+    FixedWidthBitstring,
     NXDecodingGraph,
     dem_to_decoding_graph_and_logicals,
 )
-
-from deltakit_circuit import Circuit, trim_detectors
-from deltakit_core.decoding_graphs import FixedWidthBitstring
 
 
 def stim_circuit_to_graph_dem(

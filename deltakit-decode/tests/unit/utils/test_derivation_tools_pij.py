@@ -6,11 +6,13 @@ from unittest import mock
 
 import pytest
 import stim
+from deltakit_core.data_formats import b8_to_syndromes
 from deltakit_core.decoding_graphs import (
     dem_to_decoding_graph_and_logicals,
     dem_to_hypergraph_and_logicals,
 )
-from deltakit_core.data_formats import b8_to_syndromes
+from pytest_lazy_fixtures import lf
+
 from deltakit_decode.utils import (
     calculate_pij_values,
     create_dem_from_pij,
@@ -21,8 +23,6 @@ from deltakit_decode.utils import (
     pij_edges_max_diff,
     pijs_edge_diff,
 )
-from pytest_lazy_fixtures import lf
-
 
 REFERENCE_DATA_DIR = (
     Path(__file__).parent.parent.parent.parent.parent / "tests" / "reference_data"
@@ -41,9 +41,9 @@ class TestDerivationToolsPij:
         return reference_data_dir / "b801" / "detection_events.b8"
 
     @pytest.mark.parametrize(
-        "circuit, samples, expected_pij_data",
+        ("circuit", "samples", "expected_pij_data"),
         [
-            [
+            (
                 # below data generated from tests/reference_data/b801/detection_events.b8 using generate_expectation_data
                 lf("stim_circuit"),
                 list(
@@ -140,8 +140,8 @@ class TestDerivationToolsPij:
                     (22, 23): 0.0028332468487208273,
                     (23,): 0.11115210469966132,
                 },
-            ],
-            [stim.Circuit(), [], {}],
+            ),
+            (stim.Circuit(), [], {}),
         ],
     )
     def test_calculate_pij_values_calculates_correct_values(
@@ -155,9 +155,9 @@ class TestDerivationToolsPij:
             assert math.isclose(p, expected_pij_data[e], rel_tol=0.0001)
 
     @pytest.mark.parametrize(
-        "dem, exp_data",
+        ("dem", "exp_data"),
         [
-            [
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -233,7 +233,7 @@ class TestDerivationToolsPij:
                     (5, 7): 0.00528,
                     (1, 3): 0.00176,
                 },
-            ]
+            )
         ],
     )
     def test_calculate_pij_values_calculates_correct_values_from_dem(
@@ -250,9 +250,9 @@ class TestDerivationToolsPij:
             )
 
     @pytest.mark.parametrize(
-        "circuit, b8_path, exp_pij",
+        ("circuit", "b8_path", "exp_pij"),
         [
-            [
+            (
                 lf("stim_circuit"),
                 lf("detection_events"),
                 {
@@ -607,7 +607,7 @@ class TestDerivationToolsPij:
                     (38,): 0.013888994739207435,
                     (39,): 0.035292540269184006,
                 },
-            ]
+            )
         ],
     )
     def test_calculate_pij_values_calculates_correct_degree_3_hypergraph(
@@ -637,9 +637,9 @@ class TestDerivationToolsPij:
         assert len(pij_values) == w2_count
 
     @pytest.mark.parametrize(
-        "dem, exp_data",
+        ("dem", "exp_data"),
         [
-            [
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -689,7 +689,7 @@ class TestDerivationToolsPij:
                     (0, 1, 2, 4): 1.0,
                     (0, 2, 3, 4): 1.0,
                 },
-            ],
+            ),
         ],
     )
     def test_calculate_pij_values_warns_if_too_many_edges_leads_to_pi_sigma_convergence(
@@ -728,9 +728,9 @@ class TestDerivationToolsPij:
         assert len(pij_values) == len(hyper_graph.edges)
 
     @pytest.mark.parametrize(
-        "expectation_data, expected_edges",
+        ("expectation_data", "expected_edges"),
         [
-            [
+            (
                 {
                     (0,): 0.4,
                     (0, 1): 0.2,
@@ -755,8 +755,8 @@ class TestDerivationToolsPij:
                     (2,),
                     (3,),
                 ],
-            ],
-            [
+            ),
+            (
                 {
                     (0,): 0.4,
                     (0, 1): 0.2,
@@ -767,7 +767,7 @@ class TestDerivationToolsPij:
                     (0,),
                     (1,),
                 ],
-            ],
+            ),
         ],
     )
     def test_calculate_pij_values_returns_all_edges_if_no_graph_given(
@@ -781,9 +781,9 @@ class TestDerivationToolsPij:
     # UserWarning occurs when circuit has no noise
     @pytest.mark.filterwarnings("ignore:Isolated logical observables:UserWarning")
     @pytest.mark.parametrize(
-        "pij_data, circuit, expected_dem, trim_circuit",
+        ("pij_data", "circuit", "expected_dem", "trim_circuit"),
         [
-            [
+            (
                 {
                     (4, 5): 0.03790345231176562,
                     (5, 9): 0.002868529500751227,
@@ -878,8 +878,8 @@ class TestDerivationToolsPij:
                     REFERENCE_DATA_DIR / "dem" / "circuit_noisy.dem"
                 ),
                 True,
-            ],
-            [
+            ),
+            (
                 {
                     (0, 1): 0.0033969500102377093,
                     (0, 3): 0.029459473033565553,
@@ -986,8 +986,8 @@ class TestDerivationToolsPij:
                     REFERENCE_DATA_DIR / "dem" / "circuit_logical_off_boundary.dem"
                 ),
                 True,
-            ],
-            [
+            ),
+            (
                 {
                     (3, 7): 0.005125248374863278,
                     (0, 4): 0.0057317127591073325,
@@ -1005,8 +1005,8 @@ class TestDerivationToolsPij:
                     / "unobservable_logical_rotated_mem_z_d3_r3.dem"
                 ),
                 False,
-            ],
-            [
+            ),
+            (
                 {
                     (4, 5): 0.03790345231176562,
                     (5, 9): 0.002868529500751227,
@@ -1103,7 +1103,7 @@ class TestDerivationToolsPij:
                     REFERENCE_DATA_DIR / "dem" / "circuit_noisy_2_observables.dem"
                 ),
                 True,
-            ],
+            ),
         ],
     )
     def test_create_dem_from_pij_creates_correct_dem_from_stim(
@@ -1115,9 +1115,9 @@ class TestDerivationToolsPij:
         assert set(dem) == set(expected_dem)
 
     @pytest.mark.parametrize(
-        "dem, pij_data",
+        ("dem", "pij_data"),
         [
-            [
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1129,8 +1129,8 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {(0, 1, 2): 0.5},
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1143,8 +1143,8 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {(0, 1, 2, 3): 0.5},
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1158,8 +1158,8 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {(0, 1, 2): 0.5, (0, 1, 2, 3): 0.5},
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1173,7 +1173,7 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {(0,): 0.5, (0, 1, 2, 3): 0.5},
-            ],
+            ),
         ],
     )
     def test_create_dem_from_pij_creates_correct_dem_for_hypergraph(
@@ -1185,9 +1185,9 @@ class TestDerivationToolsPij:
         assert set(b_dem) == set(dem)
 
     @pytest.mark.parametrize(
-        "dem, expectation_data, expected_pij_data, min_prob",
+        ("dem", "expectation_data", "expected_pij_data", "min_prob"),
         [
-            [
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1202,8 +1202,8 @@ class TestDerivationToolsPij:
                 {(0,): 0.1, (1,): 0.2, (0, 1): 0.5},
                 {(0,): 0.0, (0, 1): 0.27639320225002106, (1,): 0.0},
                 0.0,
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1222,8 +1222,8 @@ class TestDerivationToolsPij:
                     (1,): -0.17082039324993697,
                 },
                 -99.0,
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1238,7 +1238,7 @@ class TestDerivationToolsPij:
                 {(0,): 0.1, (1,): 0.2, (0, 1): 0.5},
                 {(0,): 1.0, (0, 1): 1.0, (1,): 1.0},
                 1.0,
-            ],
+            ),
         ],
     )
     def test_calculate_pij_values_replaces_values_below_threshold(
@@ -1262,18 +1262,18 @@ class TestDerivationToolsPij:
             calculate_pij_values({}, max_degree=5)
 
     @pytest.mark.parametrize(
-        "circuit, b8_path, max_degree",
+        ("circuit", "b8_path", "max_degree"),
         [
-            [
+            (
                 lf("stim_circuit"),
                 lf("detection_events"),
                 2,
-            ],
-            [
+            ),
+            (
                 lf("stim_circuit"),
                 lf("detection_events"),
                 3,
-            ],
+            ),
         ],
     )
     def test_calculate_pij_values_calculates_does_not_calculate_edges_with_degree_above_max_degree(
@@ -1291,39 +1291,39 @@ class TestDerivationToolsPij:
         assert len(pij_values) == edge_count
 
     @pytest.mark.parametrize(
-        "pij1, pij2",
+        ("pij1", "pij2"),
         [
-            [
+            (
                 {},
                 {},
-            ],
-            [
+            ),
+            (
                 {
                     (0, 1): 0.1111,
                 },
                 {(0, 1): 0.2222},
-            ],
-            [
+            ),
+            (
                 {
                     (0, 1): 0.1111,
                 },
                 {(1, 0): 0.2222},
-            ],
-            [
+            ),
+            (
                 {(0,): 0.5, (0, 1): 0.1},
                 {
                     (0, 1): 0.1,
                     (0,): 0.5,
                 },
-            ],
-            [
+            ),
+            (
                 {(0,): 0.5, (0, 1): 0.1, (2,): 0.0},
                 {
                     (2,): 0.6,
                     (1, 0): 0.1,
                     (0,): 0.5,
                 },
-            ],
+            ),
         ],
     )
     def test_pijs_contain_same_edges_returns_true_if_edges_identical(self, pij1, pij2):
@@ -1333,20 +1333,20 @@ class TestDerivationToolsPij:
         assert first_diff == set() or second_diff == set()
 
     @pytest.mark.parametrize(
-        "pij1, pij2",
+        ("pij1", "pij2"),
         [
-            [
+            (
                 {},
                 {(0,): 0.1},
-            ],
-            [
+            ),
+            (
                 {(1,): 0.2},
                 {(0,): 0.1},
-            ],
-            [
+            ),
+            (
                 {(0, 1): 0.1, (1,): 0.5},
                 {(0,): 0.1, (1,): 0.2},
-            ],
+            ),
         ],
     )
     def test_pijs_contain_same_edges_returns_false_if_missing_edges(self, pij1, pij2):
@@ -1356,20 +1356,20 @@ class TestDerivationToolsPij:
         assert first_diff != set() or second_diff != set()
 
     @pytest.mark.parametrize(
-        "pij1, pij2",
+        ("pij1", "pij2"),
         [
-            [
+            (
                 {},
                 {(0,): 0.1},
-            ],
-            [
+            ),
+            (
                 {(1,): 0.2},
                 {(0,): 0.1},
-            ],
-            [
+            ),
+            (
                 {(0, 1): 0.1, (1,): 0.5},
                 {(0,): 0.1, (1,): 0.2},
-            ],
+            ),
         ],
     )
     def test_pijs_contain_same_edges_returns_symmetric_diff_if_edges_not_identical(
@@ -1381,20 +1381,20 @@ class TestDerivationToolsPij:
         assert first_diff != set() or second_diff != set()
 
     @pytest.mark.parametrize(
-        "pij1, pij2",
+        ("pij1", "pij2"),
         [
-            [
+            (
                 {},
                 {},
-            ],
-            [
+            ),
+            (
                 {(0,): 0.1},
                 {(0,): 0.1},
-            ],
-            [
+            ),
+            (
                 {(0,): 0.1, (1,): 0.5},
                 {(0,): 0.1, (1,): 0.5},
-            ],
+            ),
         ],
     )
     def test_pij_edges_max_diff_returns_zero_if_edge_probs_identical(self, pij1, pij2):
@@ -1403,18 +1403,18 @@ class TestDerivationToolsPij:
         assert pij_edges_max_diff(pij1, pij2) == 0.0
 
     @pytest.mark.parametrize(
-        "pij1, pij2, max_diff",
+        ("pij1", "pij2", "max_diff"),
         [
-            [
+            (
                 {(0,): 0.1},
                 {(0,): 0.2},
                 0.1,
-            ],
-            [
+            ),
+            (
                 {(0,): 0.1, (1,): 0.1},
                 {(0,): 0.2, (1,): 0.5},
                 0.4,
-            ],
+            ),
         ],
     )
     def test_pij_edges_max_diff_returns_correct_max_diff_for_identical_edges(
@@ -1425,20 +1425,20 @@ class TestDerivationToolsPij:
         assert max_diff == pij_edges_max_diff(pij1, pij2)
 
     @pytest.mark.parametrize(
-        "pij1, pij2",
+        ("pij1", "pij2"),
         [
-            [
+            (
                 {},
                 {(0,): 0.1},
-            ],
-            [
+            ),
+            (
                 {(1,): 0.2},
                 {(0,): 0.1},
-            ],
-            [
+            ),
+            (
                 {(0, 1): 0.1, (1,): 0.5},
                 {(0,): 0.1, (1,): 0.2},
-            ],
+            ),
         ],
     )
     def test_pij_edges_raises_value_error_if_edges_not_identical(self, pij1, pij2):
@@ -1451,22 +1451,22 @@ class TestDerivationToolsPij:
             pij_edges_max_diff(pij1, pij2)
 
     @pytest.mark.parametrize(
-        "dem, pij",
+        ("dem", "pij"),
         [
-            [
+            (
                 stim.DetectorErrorModel(),
                 {},
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel("\n".join(["error(0.1) D0", "error(0.2) D1"])),
                 {(0,): 0.1, (1,): 0.1},
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(["error(0.1) D0", "error(0.2) D1", "error(0.2) D0 D1"])
                 ),
                 {(0,): 0.1, (1,): 0.1, (0, 1): 0.2},
-            ],
+            ),
         ],
     )
     def test_pij_and_dem_contain_same_edges_returns_true_if_dem_and_pij_contain_same_edges(
@@ -1477,13 +1477,13 @@ class TestDerivationToolsPij:
         assert first_diff == set() or second_diff == set()
 
     @pytest.mark.parametrize(
-        "dem, pij",
+        ("dem", "pij"),
         [
-            [
+            (
                 stim.DetectorErrorModel(),
                 {(0,): 0.3},
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1494,8 +1494,8 @@ class TestDerivationToolsPij:
                 {
                     (0,): 0.1,
                 },
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1508,8 +1508,8 @@ class TestDerivationToolsPij:
                     (0,): 0.1,
                     (2,): 0.1,
                 },
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1521,7 +1521,7 @@ class TestDerivationToolsPij:
                     (0,): 0.1,
                     (1,): 0.1,
                 },
-            ],
+            ),
         ],
     )
     def test_pij_and_dem_contain_same_edges_returns_false_if_dem_and_pij_contain_difference_edges(
@@ -1532,14 +1532,14 @@ class TestDerivationToolsPij:
         assert first_diff != set() or second_diff != set()
 
     @pytest.mark.parametrize(
-        "dem, pij, set_diff",
+        ("dem", "pij", "set_diff"),
         [
-            [
+            (
                 stim.DetectorErrorModel(),
                 {(0,): 0.3},
                 (set(), {frozenset((0,))}),
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1551,8 +1551,8 @@ class TestDerivationToolsPij:
                     (0,): 0.1,
                 },
                 ({frozenset((1,))}, {frozenset((0,))}),
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1566,8 +1566,8 @@ class TestDerivationToolsPij:
                     (2,): 0.1,
                 },
                 ({frozenset((1,))}, {frozenset((2,))}),
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1580,7 +1580,7 @@ class TestDerivationToolsPij:
                     (1,): 0.1,
                 },
                 ({frozenset((0, 1))}, {frozenset((0,)), frozenset((1,))}),
-            ],
+            ),
         ],
     )
     def test_pij_and_dem_contain_same_edges_returns_symmetric_diff_if_dem_pij_edges_differ(
@@ -1590,9 +1590,9 @@ class TestDerivationToolsPij:
         assert pij_and_dem_edge_diff(dem, pij) == set_diff
 
     @pytest.mark.parametrize(
-        "dem, pij",
+        ("dem", "pij"),
         [
-            [
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1601,8 +1601,8 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {(0, 1): 0.2},
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1611,14 +1611,14 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {(0, 1, 2): 0.2},
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(["error(0.1) D0", "error(0.2) D1", "error(0.2) D0 D1 D2"])
                 ),
                 {(0,): 0.1, (1,): 0.1, (0, 1, 2): 0.2},
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1630,7 +1630,7 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {(0,): 0.1, (1,): 0.1, (0, 1): 0.5, (0, 1, 2): 0.2},
-            ],
+            ),
         ],
     )
     def test_pij_and_dem_contain_same_edges_returns_true_if_dem_and_pij_contain_same_edges_for_hypergraph(
@@ -1641,13 +1641,13 @@ class TestDerivationToolsPij:
         assert first_diff == set() or second_diff == set()
 
     @pytest.mark.parametrize(
-        "dem, pij",
+        ("dem", "pij"),
         [
-            [
+            (
                 stim.DetectorErrorModel(),
                 {(0, 2): 0.2},
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1656,8 +1656,8 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {},
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1666,8 +1666,8 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {(0, 2): 0.2},
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1676,14 +1676,14 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {(0, 1, 3): 0.2},
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(["error(0.1) D0", "error(0.2) D1", "error(0.2) D0 D1 D2"])
                 ),
                 {(0,): 0.1, (3,): 0.1, (0, 1, 2): 0.2},
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1695,7 +1695,7 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {(0,): 0.1, (6,): 0.1, (0, 1): 0.5, (0, 1, 2): 0.2},
-            ],
+            ),
         ],
     )
     def test_pij_and_dem_contain_same_edges_returns_false_if_dem_and_pij_contain_different_edges_for_hypergraph(
@@ -1706,14 +1706,14 @@ class TestDerivationToolsPij:
         assert first_diff != set() or second_diff != set()
 
     @pytest.mark.parametrize(
-        "dem, pij, set_diff",
+        ("dem", "pij", "set_diff"),
         [
-            [
+            (
                 stim.DetectorErrorModel(),
                 {(0, 1, 2): 0.3},
                 (set(), {frozenset((0, 1, 2))}),
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1725,8 +1725,8 @@ class TestDerivationToolsPij:
                     (0, 1, 3): 0.1,
                 },
                 ({frozenset((0, 1, 2))}, {frozenset((0, 1, 3))}),
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1763,7 +1763,7 @@ class TestDerivationToolsPij:
                         )
                     },
                 ),
-            ],
+            ),
         ],
     )
     def test_pij_and_dem_contain_same_edges_returns_symmetric_diff_if_dem_pij_edges_differ_for_hypergraphs(
@@ -1773,14 +1773,14 @@ class TestDerivationToolsPij:
         assert pij_and_dem_edge_diff(dem, pij, is_hypergraph=True) == set_diff
 
     @pytest.mark.parametrize(
-        "dem, pij, max_diff",
+        ("dem", "pij", "max_diff"),
         [
-            [
+            (
                 stim.DetectorErrorModel(),
                 {},
                 0.0,
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1790,8 +1790,8 @@ class TestDerivationToolsPij:
                 ),
                 {(0, 1): 0.2},
                 0.1,
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1801,15 +1801,15 @@ class TestDerivationToolsPij:
                 ),
                 {(0, 2): 0.2},
                 0.1,
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(["error(0.1) D0", "error(0.2) D1", "error(0.2) D0 D1"])
                 ),
                 {(0,): 0.1, (1,): 0.1, (0, 1): 0.4},
                 0.2,
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1822,7 +1822,7 @@ class TestDerivationToolsPij:
                 ),
                 {(0,): 0.1, (1,): 0.1, (0, 1): 0.5, (1, 2): 0.2},
                 0.3,
-            ],
+            ),
         ],
     )
     def test_dem_and_pij_edges_max_diff_returns_correct_max_diff(
@@ -1832,14 +1832,14 @@ class TestDerivationToolsPij:
         assert dem_and_pij_edges_max_diff(dem, pij) == max_diff
 
     @pytest.mark.parametrize(
-        "dem, pij, max_diff",
+        ("dem", "pij", "max_diff"),
         [
-            [
+            (
                 stim.DetectorErrorModel(),
                 {},
                 0.0,
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1849,8 +1849,8 @@ class TestDerivationToolsPij:
                 ),
                 {(0, 1, 2): 0.2},
                 0.1,
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1860,15 +1860,15 @@ class TestDerivationToolsPij:
                 ),
                 {(0, 2): 0.2},
                 0.1,
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(["error(0.1) D0", "error(0.2) D1", "error(0.2) D0 D1 D2"])
                 ),
                 {(0,): 0.1, (1,): 0.1, (0, 1, 2): 0.4},
                 0.2,
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1881,7 +1881,7 @@ class TestDerivationToolsPij:
                 ),
                 {(0,): 0.1, (1,): 0.1, (0, 1): 0.5, (1, 2, 3): 0.2},
                 0.3,
-            ],
+            ),
         ],
     )
     def test_dem_and_pij_edges_max_diff_returns_correct_max_diff_for_hypergraphs(
@@ -1891,13 +1891,13 @@ class TestDerivationToolsPij:
         assert dem_and_pij_edges_max_diff(dem, pij, is_hypergraph=True) == max_diff
 
     @pytest.mark.parametrize(
-        "dem, pij",
+        ("dem", "pij"),
         [
-            [
+            (
                 stim.DetectorErrorModel(),
                 {(0, 2): 0.2},
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1906,8 +1906,8 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {},
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1916,8 +1916,8 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {(0, 2): 0.2},
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1926,14 +1926,14 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {(0, 1): 0.2},
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(["error(0.1) D3", "error(0.2) D1", "error(0.2) D3 D1"])
                 ),
                 {(0,): 0.1, (1,): 0.1, (1, 2): 0.2},
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1945,7 +1945,7 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {(1,): 0.1, (0, 1): 0.5, (1, 2): 0.2},
-            ],
+            ),
         ],
     )
     def test_dem_and_pij_edges_max_diff_raises_value_error_if_do_not_contain_same_edges(
@@ -1959,13 +1959,13 @@ class TestDerivationToolsPij:
             dem_and_pij_edges_max_diff(dem, pij)
 
     @pytest.mark.parametrize(
-        "dem, pij",
+        ("dem", "pij"),
         [
-            [
+            (
                 stim.DetectorErrorModel("error(0.1) D0 D1"),
                 {(0, 1): 0.1},
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -1975,7 +1975,7 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {(0,): 0.1, (0, 1): 0.1},
-            ],
+            ),
         ],
     )
     def test_pij_and_dem_edge_diff_gives_correct_answer_when_no_boundary(
@@ -1989,12 +1989,13 @@ class TestDerivationToolsPij:
             first_diff, second_diff = pij_and_dem_edge_diff(
                 dem, pij, is_hypergraph=False
             )
-        assert len(first_diff) == 0 and len(second_diff) == 0
+        assert len(first_diff) == 0
+        assert len(second_diff) == 0
 
     @pytest.mark.parametrize(
-        "dem, pij, expected_max_diff",
+        ("dem", "pij", "expected_max_diff"),
         [
-            [
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -2004,8 +2005,8 @@ class TestDerivationToolsPij:
                 ),
                 {(0, 1): 0.2},
                 0.1,
-            ],
-            [
+            ),
+            (
                 stim.DetectorErrorModel(
                     "\n".join(
                         [
@@ -2016,7 +2017,7 @@ class TestDerivationToolsPij:
                 ),
                 {(0,): 0.1, (0, 1): 0.2},
                 0.1,
-            ],
+            ),
         ],
     )
     def test_dem_and_pij_edges_max_diff_gives_correct_answer_when_no_boundary(
@@ -2031,9 +2032,9 @@ class TestDerivationToolsPij:
         assert max_diff == expected_max_diff
 
     @pytest.mark.parametrize(
-        "exp_data, noise_floor_dem, exp_pij_values",
+        ("exp_data", "noise_floor_dem", "exp_pij_values"),
         [
-            [
+            (
                 {(0,): 0.0, (1,): 0.0, (0, 1): 0.0},
                 stim.DetectorErrorModel(
                     "\n".join(
@@ -2047,8 +2048,8 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {(0,): 0.05, (1,): 0.06, (0, 1): 0.2},
-            ],
-            [
+            ),
+            (
                 {(0,): 0.2, (1,): 0.2, (0, 1): 0.25},
                 stim.DetectorErrorModel(
                     "\n".join(
@@ -2062,8 +2063,8 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {(0,): 0.5, (1,): 0.6, (0, 1): 0.22613872124741696},
-            ],
-            [
+            ),
+            (
                 {(0,): 0.2, (1,): 0.2, (0, 1): 0.05},
                 stim.DetectorErrorModel(
                     "\n".join(
@@ -2077,7 +2078,7 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {(0,): 0.5, (1,): 0.6, (0, 1): 0.2},
-            ],
+            ),
         ],
     )
     def test_calculate_pij_values_floors_values_by_graph(
@@ -2090,9 +2091,9 @@ class TestDerivationToolsPij:
         assert pij_data == exp_pij_values
 
     @pytest.mark.parametrize(
-        "exp_data, noise_floor_dem, exp_pij_values",
+        ("exp_data", "noise_floor_dem", "exp_pij_values"),
         [
-            [
+            (
                 {(0,): 0.0, (1,): 0.0, (0, 1, 2): 0.0},
                 stim.DetectorErrorModel(
                     "\n".join(
@@ -2107,8 +2108,8 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {(0,): 0.05, (1,): 0.06, (0, 1, 2): 0.2},
-            ],
-            [
+            ),
+            (
                 {
                     (0,): 0.2,
                     (1,): 0.2,
@@ -2137,8 +2138,8 @@ class TestDerivationToolsPij:
                     (0, 2): -0.14549722436790286,
                     (1, 2): -0.14549722436790286,
                 },
-            ],
-            [
+            ),
+            (
                 {
                     (0,): 0.2,
                     (1,): 0.2,
@@ -2168,8 +2169,8 @@ class TestDerivationToolsPij:
                     (0, 2): -0.14549722436790286,
                     (1, 2): -0.14549722436790286,
                 },
-            ],
-            [
+            ),
+            (
                 {
                     (0,): 0.2,
                     (1,): 0.2,
@@ -2201,7 +2202,7 @@ class TestDerivationToolsPij:
                     (0, 2): 0.01,
                     (1, 2): 0.99,
                 },
-            ],
+            ),
         ],
     )
     def test_calculate_pij_values_floors_values_by_hypergraph(
@@ -2214,9 +2215,9 @@ class TestDerivationToolsPij:
         assert pij_data == exp_pij_values
 
     @pytest.mark.parametrize(
-        "exp_data, noise_floor_dem, exp_pij_values",
+        ("exp_data", "noise_floor_dem", "exp_pij_values"),
         [
-            [
+            (
                 {(0,): 0.0, (1,): 0.0, (0, 1): 0.0},
                 stim.DetectorErrorModel(
                     "\n".join(
@@ -2229,8 +2230,8 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {(0,): 0.05, (1,): 0.06, (0, 1): 0.01},
-            ],
-            [
+            ),
+            (
                 {(0,): 0.0, (1,): 0.0, (0, 1): 0.0},
                 stim.DetectorErrorModel(
                     "\n".join(
@@ -2243,7 +2244,7 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {(0,): 0.05, (1,): 0.01, (0, 1): 0.1},
-            ],
+            ),
         ],
     )
     def test_calculate_pij_values_floors_values_by_min_prob_when_edge_not_present(
@@ -2258,9 +2259,9 @@ class TestDerivationToolsPij:
         assert pij_data == exp_pij_values
 
     @pytest.mark.parametrize(
-        "exp_data, noise_floor_dem, exp_pij_values",
+        ("exp_data", "noise_floor_dem", "exp_pij_values"),
         [
-            [
+            (
                 {(0,): 0.0, (1,): 0.0, (0, 1): 0.0},
                 stim.DetectorErrorModel(
                     "\n".join(
@@ -2273,8 +2274,8 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {(0,): 0.05, (1,): 0.06, (0, 1): 0.0},
-            ],
-            [
+            ),
+            (
                 {(0,): 0.0, (1,): 0.0, (0, 1): 0.0},
                 stim.DetectorErrorModel(
                     "\n".join(
@@ -2287,7 +2288,7 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {(0,): 0.05, (1,): -0.125, (0, 1): 0.1},
-            ],
+            ),
         ],
     )
     def test_calculate_pij_values_does_not_floor_when_edge_not_present_and_min_prob_not_specified(
@@ -2300,9 +2301,9 @@ class TestDerivationToolsPij:
         assert pij_data == exp_pij_values
 
     @pytest.mark.parametrize(
-        "exp_data, noise_floor_dem, exp_pij_values",
+        ("exp_data", "noise_floor_dem", "exp_pij_values"),
         [
-            [
+            (
                 {(0,): 0.0, (1,): 0.0, (0, 1, 2): 0.0},
                 stim.DetectorErrorModel(
                     "\n".join(
@@ -2316,8 +2317,8 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {(0,): 0.05, (1,): 0.06, (0, 1, 2): 0.01},
-            ],
-            [
+            ),
+            (
                 {(0,): 0.0, (1,): 0.0, (0, 1, 2): 0.0},
                 stim.DetectorErrorModel(
                     "\n".join(
@@ -2331,7 +2332,7 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {(0,): 0.05, (1,): 0.01, (0, 1, 2): 0.2},
-            ],
+            ),
         ],
     )
     def test_calculate_pij_values_floors_values_by_min_prob_when_hyperedge_not_present(
@@ -2346,9 +2347,9 @@ class TestDerivationToolsPij:
         assert pij_data == exp_pij_values
 
     @pytest.mark.parametrize(
-        "exp_data, noise_floor_dem, exp_pij_values",
+        ("exp_data", "noise_floor_dem", "exp_pij_values"),
         [
-            [
+            (
                 {(0,): 0.0, (1,): 0.0, (0, 1, 2): 0.0},
                 stim.DetectorErrorModel(
                     "\n".join(
@@ -2361,8 +2362,8 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {(0,): 0.05, (1,): 0.06, (0, 1, 2): 0.00},
-            ],
-            [
+            ),
+            (
                 {(0,): 0.0, (1,): 0.0, (0, 1, 2): 0.0},
                 stim.DetectorErrorModel(
                     "\n".join(
@@ -2375,7 +2376,7 @@ class TestDerivationToolsPij:
                     )
                 ),
                 {(0,): 0.05, (1,): -0.125, (0, 1, 2): 0.1},
-            ],
+            ),
         ],
     )
     def test_calculate_pij_values_does_not_floor_when_hyperedge_not_present_and_min_prob_not_specified(
