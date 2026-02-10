@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.7.0 (2026-02-10)
+
+### Features
+
+- Implement error-budgeting ([#76](https://github.com/Deltakit/deltakit/pull/76),
+  [`d624a98`](https://github.com/Deltakit/deltakit/commit/d624a98a156252a3ddeaf9bd69bec5a418d942af))
+
+
 ## v0.6.2 (2026-01-29)
 
 ### Bug Fixes
