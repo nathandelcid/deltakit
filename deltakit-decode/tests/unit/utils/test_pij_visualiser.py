@@ -2,7 +2,9 @@
 import platform
 from unittest import mock
 
+import numpy as np
 import pytest
+from deltakit_explorer.types._types import QubitCoordinateToDetectorMapping
 
 from deltakit_decode.utils._pij_visualiser import plot_correlation_matrix
 
@@ -36,14 +38,29 @@ class TestPijVisualiser:
                                "default TKinter backend needs a display")
     def test_plot_correlation_matrix_creates_figure(self, tmp_path, matrix, major_minor_mapping):
         filepath = tmp_path / "testfig.png"
-        plt = plot_correlation_matrix(matrix, major_minor_mapping)
+        with pytest.warns(DeprecationWarning, match=r"plot_correlation_matrix is deprecated"):
+            plt = plot_correlation_matrix(matrix, major_minor_mapping)
         plt.savefig(filepath)
         plt.clf()
         assert filepath.is_file()
 
-    def test_plot_correlation_matrix_raises_exception_if_seaborn_not_installed(self):
-        with (
-             mock.patch("builtins.__import__", side_effect=ImportError),
-             pytest.raises(ImportError, match=r"Seaborn is not installed - please install Visualisation extras")
-        ):
-            plot_correlation_matrix([], {})
+    def test_plot_correlation_matrix_uses_explorer_correlation_matrix(self):
+        matrix = [[1.0, 0.0], [0.0, 1.0]]
+        mapping = {(1.0, 4.0): [0], (3.0, 4.0): [1]}
+        labels = ("q0", "q1")
+
+        with mock.patch("deltakit_decode.utils._pij_visualiser.correlation_matrix", autospec=True) as mocked_correlation_matrix:
+            mocked_correlation_matrix.return_value = "plot_object"
+            with pytest.warns(DeprecationWarning, match=r"plot_correlation_matrix is deprecated"):
+                result = plot_correlation_matrix(matrix, mapping, labels=labels)
+
+        assert result == "plot_object"
+        mocked_correlation_matrix.assert_called_once()
+        called_matrix = mocked_correlation_matrix.call_args.kwargs["matrix"]
+        called_mapping = mocked_correlation_matrix.call_args.kwargs["qubit_to_detector_mapping"]
+        called_labels = mocked_correlation_matrix.call_args.kwargs["labels"]
+        assert isinstance(called_matrix, np.ndarray)
+        assert np.array_equal(called_matrix, np.asarray(matrix))
+        assert isinstance(called_mapping, QubitCoordinateToDetectorMapping)
+        assert called_mapping.detector_map == mapping
+        assert called_labels == labels
