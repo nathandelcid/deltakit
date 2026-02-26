@@ -416,6 +416,10 @@ Description of ``deltakit.decode.noise_sources`` namespace here.
     split_measurement_bitstring
     VisDecodingGraph3D
 
+.. note::
+    ``plot_correlation_matrix`` is deprecated. Use
+    ``deltakit.explorer.plotting.correlation_matrix`` instead.
+
 .. _api-deltakit-explorer:
 
 ``deltakit.explorer``
